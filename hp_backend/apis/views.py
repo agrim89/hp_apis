@@ -71,6 +71,8 @@ class CompanyDetail(APIView):
 
 
 class ListDetail(APIView):
+    now = datetime.datetime.now()
+
     def post(self, request):
         try:
             date = request.data["date"]
@@ -92,10 +94,10 @@ class ListDetail(APIView):
                 payload['notebook'] = note
                 payload['workbook'] = work
 
-                return Response(dict(payload=payload, status=status.HTTP_200_OK, time=datetime.datetime.now(), message='success'))
+                return Response(dict(payload=payload, status=status.HTTP_200_OK, time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
             else:
                 return Response(
-                    dict(payload={}, status=status.HTTP_204_NO_CONTENT, time=datetime.datetime.now(), message="Please select a date"))
+                    dict(payload={}, status=status.HTTP_204_NO_CONTENT, time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"))
         except KeyError:
             return Response(
                 dict(payload={}, status=status.HTTP_204_NO_CONTENT, time=datetime.datetime.now(),

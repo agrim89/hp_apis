@@ -8,30 +8,36 @@ from .models import BaseUser, Company, NoteBook, WorkStation, BusinessPC
 class BaseUserAdmin(admin.ModelAdmin):
     form = BaseUserForm
     fields = [('first_name', 'last_name'), ("email", "username"),'password', "dealer_name", "mobile",
-              "address", "gender"]
+              "address", "gender", "is_active"]
+    list_display = ('username', 'is_active',)
+    list_filter = ('is_active',)
 
 
 class CompanyAdmin(admin.ModelAdmin):
     form = CompanyForm
     fields = ['company_name', 'domain_name', "partner_id", 'region', "location", "dedicated_person", "mobile", ]
+    list_display = ('company_name', 'domain_name',)
 
 
 class WorkStationAdmin(admin.ModelAdmin):
     form = WorkStationForm
-    fields = ['product', 'part_no', "specification_details", "processor",'graphics', "warranty", "ram",
+    fields = ['product', 'part_no', "specification_details", "processor", 'graphics', "warranty", "ram",
               "hard_disk", "odd", "price"]
+    list_display = ('product', 'price',"modified")
 
 
 class BusinessPCAdmin(admin.ModelAdmin):
     form = BusinessPCForm
     fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
               "hard_disk", "operating_system", "screen", "price"]
+    list_display = ('product', 'price', "modified")
 
 
 class NoteBookAdmin(admin.ModelAdmin):
     form = NoteBookForm
     fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
               "hard_disk", "operating_system", "screen", "price"]
+    list_display = ('product', 'price', "modified")
 
 
 class HewlettPackardAdminSite(AdminSite):
@@ -43,9 +49,6 @@ class HewlettPackardAdminSite(AdminSite):
 
 
 admin_site = HewlettPackardAdminSite()
-
-# admin_site.site_header='HP Administration'
-# admin_site.site_title='HP Admin'
 
 
 admin_site.register(BaseUser, BaseUserAdmin)

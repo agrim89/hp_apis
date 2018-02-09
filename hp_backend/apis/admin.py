@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import BaseUser, Company, NoteBook, WorkStation, BusinessPC
+from django.contrib.admin import AdminSite
+from django.utils.translation import ugettext_lazy
 from .forms import BaseUserForm, CompanyForm, NoteBookForm, WorkStationForm, BusinessPCForm
-from django.contrib.auth.models import User,Group
+from .models import BaseUser, Company, NoteBook, WorkStation, BusinessPC
+
 
 class BaseUserAdmin(admin.ModelAdmin):
     form = BaseUserForm
@@ -31,14 +33,23 @@ class NoteBookAdmin(admin.ModelAdmin):
     fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
               "hard_disk", "operating_system", "screen", "price"]
 
-admin.site.site_header='HP Administration'
-admin.site.site_title='HP Admin'
 
-admin.site.unregister(Group)
-admin.site.unregister(User)
+class HewlettPackardAdminSite(AdminSite):
+    site_title = ugettext_lazy('Hewlett-Packard Admin')
 
-admin.site.register(BaseUser, BaseUserAdmin)
-admin.site.register(Company, CompanyAdmin)
-admin.site.register(BusinessPC, BusinessPCAdmin)
-admin.site.register(NoteBook, NoteBookAdmin)
-admin.site.register(WorkStation, WorkStationAdmin)
+    site_header = ugettext_lazy('Hewlett-Packard administration')
+
+    index_title = ugettext_lazy('Hewlett-Packard administration')
+
+
+admin_site = HewlettPackardAdminSite()
+
+# admin_site.site_header='HP Administration'
+# admin_site.site_title='HP Admin'
+
+
+admin_site.register(BaseUser, BaseUserAdmin)
+admin_site.register(Company, CompanyAdmin)
+admin_site.register(BusinessPC, BusinessPCAdmin)
+admin_site.register(NoteBook, NoteBookAdmin)
+admin_site.register(WorkStation, WorkStationAdmin)

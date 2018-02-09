@@ -1,10 +1,10 @@
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Company, BaseUser, NoteBook, WorkStation, BusinessPC
 from .serializers import BaseUserSerializer, CompanySerializer
-import json, datetime
+import datetime
+
 
 class UserDetail(APIView):
 
@@ -74,18 +74,17 @@ class ListDetail(APIView):
     def post(self, request):
         try:
             date = request.data["date"]
-            mod_date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
             payload = dict()
             if date:
-                bpc = BusinessPC.objects.filter(modified=mod_date).values('product', 'part_no', "specification_details",
+                bpc = BusinessPC.objects.filter(modified__gte=date).values('product', 'part_no', "specification_details",
                                                                              "processor", "screen_size", "warranty", "ram",
                                                                              "hard_disk", "operating_system", "screen",
                                                                              "price")
-                work = WorkStation.objects.filter(modified=mod_date).values('product', 'part_no',
+                work = WorkStation.objects.filter(modified__gte=date).values('product', 'part_no',
                                                                                "specification_details", "processor",
                                                                                'graphics', "warranty", "ram", "hard_disk",
                                                                                "odd", "price")
-                note = NoteBook.objects.filter(modified=mod_date).values('product', 'part_no', "specification_details",
+                note = NoteBook.objects.filter(modified__gte=date).values('product', 'part_no', "specification_details",
                                                                             "processor", "screen_size", "warranty", "ram",
                                                                             "hard_disk", "operating_system", "screen",
                                                                             "price")
@@ -101,3 +100,24 @@ class ListDetail(APIView):
             return Response(
                 dict(payload={}, status=status.HTTP_204_NO_CONTENT, time=datetime.datetime.now(),
                      message="Please select a date"))
+
+
+class LoginVerify(APIView):
+    def post(self, request):
+        try:
+            payload = dict()
+            username = request.data["username"]
+            password = request.data["password"]
+            user = BaseUser.objects.get(username=username, password=password)
+            payload['name'] = user.get_full_name()
+            payload['username'] = user.username
+            payload['email'] = user.email
+            payload['dealer_name'] = user.dealer_name
+            payload['mobile'] = user.mobile
+            payload['address'] = user.address
+            payload['gender'] = user.gender
+
+            return Response(dict(payload=payload, message="User Found", status=status.HTTP_200_OK))
+        except Exception:
+            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
+

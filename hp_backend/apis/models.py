@@ -60,8 +60,17 @@ class BusinessPC(models.Model):
     operating_system = models.CharField(max_length=1000)
     screen = models.CharField(max_length=1000)
     price = models.CharField(max_length=1000)
-    created = models.DateField(default=datetime.datetime.now().date())
-    modified = models.DateField(default=datetime.datetime.now().date())
+    created = models.CharField(max_length=100)
+    modified = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if self.created:
+            self.modified = now
+        else:
+            self.modified = now
+            self.created = now
+        return super(BusinessPC, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{} : Rs. {}".format(self.product, self.price)
@@ -82,8 +91,17 @@ class NoteBook(models.Model):
     operating_system = models.CharField(max_length=1000)
     screen = models.CharField(max_length=1000)
     price = models.CharField(max_length=1000)
-    created = models.DateField(default=datetime.datetime.now().date())
-    modified = models.DateField(default=datetime.datetime.now().date())
+    created = models.CharField(max_length=100)
+    modified = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if self.created:
+            self.modified = now
+        else:
+            self.modified = now
+            self.created = now
+        return super(NoteBook, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{} : Rs. {}".format(self.product, self.price)
@@ -103,8 +121,19 @@ class WorkStation(models.Model):
     hard_disk = models.CharField(max_length=1000)
     odd = models.CharField(max_length=1000)
     price = models.CharField(max_length=1000)
-    created = models.DateField(default=datetime.datetime.now().date())
-    modified = models.DateField(default=datetime.datetime.now().date())
+    created = models.CharField(max_length=100)
+    modified = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if self.created:
+            self.modified = now
+        else:
+            self.modified = now
+            self.created = now
+        # self.modified = datetime.datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
+        # self.created = datetime.datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
+        return super(WorkStation, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{} : Rs. {}".format(self.product, self.price)

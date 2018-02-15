@@ -1,4 +1,4 @@
-#!/home/sl-dtp002/hp_backend/venv/bin/python3.6
+#!/home/encode/hp_apis/hp_backend/venv/bin/python3.6
 from django.core import management
 
 if __name__ == "__main__":

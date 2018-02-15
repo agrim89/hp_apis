@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
-from .forms import BaseUserForm, CompanyForm, NoteBookForm, WorkStationForm, BusinessPCForm
-from .models import BaseUser, Company, NoteBook, WorkStation, BusinessPC
+from .forms import BaseUserForm, CompanyForm, ProductDetailsForm
+from .models import BaseUser, Company, ProductDetails
 
 
 class BaseUserAdmin(admin.ModelAdmin):
@@ -20,28 +20,29 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ('status',)
 
 
-class WorkStationAdmin(admin.ModelAdmin):
-    form = WorkStationForm
-    fields = ['product', 'part_no', "specification_details", "processor", 'graphics', "warranty", "ram",
-              "hard_disk", "odd", "price"]
-    list_display = ('product', "processor", "hard_disk", "ram", 'price', "modified")
-    list_filter = ('ram', "processor", "hard_disk")
+class ProductDetailsAdmin(admin.ModelAdmin):
+    form = ProductDetailsForm
+    fields = ['category','product', 'part_no', "specification_details", "processor", "screen_size", "warranty",
+              "ram", "hard_disk", "operating_system", "screen",'odd', 'graphics', "price", "image_url", "status"]
 
+    list_display = ('category', 'product', "processor", "hard_disk", "ram", 'price', "modified")
+    list_filter = ('category', 'ram', "processor", "hard_disk")
 
-class BusinessPCAdmin(admin.ModelAdmin):
-    form = BusinessPCForm
-    fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
-              "hard_disk", "operating_system", "screen", "price"]
-    list_display = ('product', "processor", "screen_size", "ram", 'price', "modified")
-    list_filter = ('ram', "processor", "hard_disk")
-
-
-class NoteBookAdmin(admin.ModelAdmin):
-    form = NoteBookForm
-    fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
-              "hard_disk", "operating_system", "screen", "price"]
-    list_display = ('product', "processor", "screen_size", "ram", 'price', "modified")
-    list_filter = ('ram', "processor", "hard_disk")
+#
+# class BusinessPCAdmin(admin.ModelAdmin):
+#     form = BusinessPCForm
+#     fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
+#               "hard_disk", "operating_system", "screen", "price"]
+#     list_display = ('product', "processor", "screen_size", "ram", 'price', "modified")
+#     list_filter = ('ram', "processor", "hard_disk")
+#
+#
+# class NoteBookAdmin(admin.ModelAdmin):
+#     form = NoteBookForm
+#     fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
+#               "hard_disk", "operating_system", "screen", "price"]
+#     list_display = ('product', "processor", "screen_size", "ram", 'price', "modified")
+#     list_filter = ('ram', "processor", "hard_disk")
 
 
 class HewlettPackardAdminSite(AdminSite):
@@ -57,6 +58,6 @@ admin_site = HewlettPackardAdminSite()
 
 admin_site.register(BaseUser, BaseUserAdmin)
 admin_site.register(Company, CompanyAdmin)
-admin_site.register(BusinessPC, BusinessPCAdmin)
-admin_site.register(NoteBook, NoteBookAdmin)
-admin_site.register(WorkStation, WorkStationAdmin)
+admin_site.register(ProductDetails, ProductDetailsAdmin)
+# admin_site.register(NoteBook, NoteBookAdmin)
+# admin_site.register(WorkStation, WorkStationAdmin)

@@ -8,6 +8,12 @@ gender = (
     ("Female", "Female",)
 )
 
+category = (
+    ('Notebook', 'Notebook'),
+    ('BusinessPC', 'BusinessPC' ),
+    ('Workstation', 'Workstation')
+)
+
 
 class BaseUser(User):
     dealer_name = models.CharField(max_length=100)
@@ -48,22 +54,25 @@ class Company(models.Model):
         return "{} : {}".format(self.company_name, self.domain_name)
 
 
-class BusinessPC(models.Model):
+class ProductDetails(models.Model):
+    category = models.CharField(max_length=20, choices=category)
     product = models.CharField(max_length=1000)
     part_no = models.CharField(max_length=1000)
     specification_details = models.CharField(max_length=1000)
     processor = models.CharField(max_length=1000)
-    screen_size = models.CharField(max_length=1000)
+    screen_size = models.CharField(max_length=1000, null=True, blank=True)
     warranty = models.CharField(max_length=1000)
     ram = models.CharField(max_length=1000)
     hard_disk = models.CharField(max_length=1000)
-    operating_system = models.CharField(max_length=1000)
-    screen = models.CharField(max_length=1000)
+    operating_system = models.CharField(max_length=1000, null=True, blank=True)
+    screen = models.CharField(max_length=1000, null=True, blank=True)
     price = models.CharField(max_length=1000)
+    graphics = models.CharField(max_length=1000, null=True, blank=True)
+    odd = models.CharField(max_length=1000, null=True, blank=True)
     created = models.CharField(max_length=100)
     modified = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
-
+    image_url = models.URLField(max_length=1000)
     def save(self, *args, **kwargs):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if self.created:
@@ -71,75 +80,74 @@ class BusinessPC(models.Model):
         else:
             self.modified = now
             self.created = now
-        return super(BusinessPC, self).save(*args, **kwargs)
+        return super(ProductDetails, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "{} : Rs. {}".format(self.product, self.price)
+        return "{} - {} : Rs. {}".format(self.category, self.product, self.price)
 
     def __unicode__(self):
-        return "{} : {}".format(self.product, self.price)
+        return "{} - {} : Rs. {}".format(self.category, self.product, self.price)
 
 
-class NoteBook(models.Model):
-    product = models.CharField(max_length=1000)
-    part_no = models.CharField(max_length=1000)
-    specification_details = models.CharField(max_length=1000)
-    processor = models.CharField(max_length=1000)
-    screen_size = models.CharField(max_length=1000)
-    warranty = models.CharField(max_length=1000)
-    ram = models.CharField(max_length=1000)
-    hard_disk = models.CharField(max_length=1000)
-    operating_system = models.CharField(max_length=1000)
-    screen = models.CharField(max_length=1000)
-    price = models.CharField(max_length=1000)
-    created = models.CharField(max_length=100)
-    modified = models.CharField(max_length=100)
-    status = models.BooleanField(default=True)
+# class BusinessPC(models.Model):
+#     product = models.CharField(max_length=1000)
+#     part_no = models.CharField(max_length=1000)
+#     specification_details = models.CharField(max_length=1000)
+#     processor = models.CharField(max_length=1000)
+#     screen_size = models.CharField(max_length=1000)
+#     warranty = models.CharField(max_length=1000)
+#     ram = models.CharField(max_length=1000)
+#     hard_disk = models.CharField(max_length=1000)
+#     operating_system = models.CharField(max_length=1000)
+#
+#     screen = models.CharField(max_length=1000)
+#     price = models.CharField(max_length=1000)
+#     created = models.CharField(max_length=100)
+#     modified = models.CharField(max_length=100)
+#     status = models.BooleanField(default=True)
+#
+#     def save(self, *args, **kwargs):
+#         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#         if self.created:
+#             self.modified = now
+#         else:
+#             self.modified = now
+#             self.created = now
+#         return super(BusinessPC, self).save(*args, **kwargs)
+#
+#     def __str__(self):
+#         return "{} : Rs. {}".format(self.product, self.price)
+#
+#     def __unicode__(self):
+#         return "{} : {}".format(self.product, self.price)
 
-    def save(self, *args, **kwargs):
-        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        if self.created:
-            self.modified = now
-        else:
-            self.modified = now
-            self.created = now
-        return super(NoteBook, self).save(*args, **kwargs)
 
-    def __str__(self):
-        return "{} : Rs. {}".format(self.product, self.price)
-
-    def __unicode__(self):
-        return "{} : Rs. {}".format(self.product, self.price)
-
-
-class WorkStation(models.Model):
-    product = models.CharField(max_length=1000)
-    part_no = models.CharField(max_length=1000)
-    specification_details = models.CharField(max_length=1000)
-    processor = models.CharField(max_length=1000)
-    graphics = models.CharField(max_length=1000)
-    warranty = models.CharField(max_length=1000)
-    ram = models.CharField(max_length=1000)
-    hard_disk = models.CharField(max_length=1000)
-    odd = models.CharField(max_length=1000)
-    price = models.CharField(max_length=1000)
-    created = models.CharField(max_length=100)
-    modified = models.CharField(max_length=100)
-    status = models.BooleanField(default=True)
-
-    def save(self, *args, **kwargs):
-        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        if self.created:
-            self.modified = now
-        else:
-            self.modified = now
-            self.created = now
-        # self.modified = datetime.datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
-        # self.created = datetime.datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
-        return super(WorkStation, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return "{} : Rs. {}".format(self.product, self.price)
-
-    def __unicode__(self):
-        return "{} : Rs. {}".format(self.product, self.price)
+# class WorkStation(models.Model):
+#     product = models.CharField(max_length=1000)
+#     part_no = models.CharField(max_length=1000)
+#     specification_details = models.CharField(max_length=1000)
+#     processor = models.CharField(max_length=1000)
+#     warranty = models.CharField(max_length=1000)
+#     ram = models.CharField(max_length=1000)
+#     hard_disk = models.CharField(max_length=1000)
+#     graphics = models.CharField(max_length=1000)
+#     odd = models.CharField(max_length=1000)
+#     price = models.CharField(max_length=1000)
+#     created = models.CharField(max_length=100)
+#     modified = models.CharField(max_length=100)
+#     status = models.BooleanField(default=True)
+#
+#     def save(self, *args, **kwargs):
+#         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#         if self.created:
+#             self.modified = now
+#         else:
+#             self.modified = now
+#             self.created = now
+#         return super(WorkStation, self).save(*args, **kwargs)
+#
+#     def __str__(self):
+#         return "{} : Rs. {}".format(self.product, self.price)
+#
+#     def __unicode__(self):
+#         return "{} : Rs. {}".format(self.product, self.price)

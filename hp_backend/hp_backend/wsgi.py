@@ -7,7 +7,9 @@ For more information on this file, see
 https://docs.djangoproject.com/en/2.0/howto/deployment/wsgi/
 """
 
-import os
+import os,sys
+
+sys.path.append("/home/encode/hp_apis/hp_backend/venv/lib/python3.6/site-packages")
 
 from django.core.wsgi import get_wsgi_application
 

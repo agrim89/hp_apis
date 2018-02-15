@@ -1,4 +1,4 @@
-#!/home/sl-dtp002/hp_backend/venv/bin/python
+#!/home/encode/hp_apis/hp_backend/venv/bin/python
 
 import sys
 import getopt

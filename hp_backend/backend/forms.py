@@ -1,5 +1,5 @@
 import django.forms
-from .models import BaseUser, Company, BusinessPC, NoteBook, WorkStation
+from .models import BaseUser, Company, ProductDetails
 
 
 class BaseUserForm(django.forms.ModelForm):
@@ -19,31 +19,30 @@ class CompanyForm(django.forms.ModelForm):
         fields = ['company_name', 'domain_name', "partner_id", 'region', "location", "dedicated_person", "mobile",]
 
 
-class WorkStationForm(django.forms.ModelForm):
+class ProductDetailsForm(django.forms.ModelForm):
     """
     User form
     """
     class Meta:
-        model = WorkStation
-        fields = ['product', 'part_no', "specification_details", "processor", 'graphics', "warranty", "ram",
-                  "hard_disk", "odd", "price"]
-
-
-class BusinessPCForm(django.forms.ModelForm):
-    """
-    User form
-    """
-    class Meta:
-        model = BusinessPC
-        fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
-                  "hard_disk", "operating_system", "screen", "price"]
-
-
-class NoteBookForm(django.forms.ModelForm):
-    """
-    User form
-    """
-    class Meta:
-        model = NoteBook
-        fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
-                  "hard_disk", "operating_system", "screen", "price"]
+        model = ProductDetails
+        fields = ['category', 'product', 'part_no', "specification_details", "processor", "screen_size", "warranty",
+                  "ram", "hard_disk", "operating_system", "screen", 'odd', 'graphics', "price", "image_url", "status"]
+#
+# class BusinessPCForm(django.forms.ModelForm):
+#     """
+#     User form
+#     """
+#     class Meta:
+#         model = BusinessPC
+#         fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
+#                   "hard_disk", "operating_system", "screen", "price"]
+#
+#
+# class NoteBookForm(django.forms.ModelForm):
+#     """
+#     User form
+#     """
+#     class Meta:
+#         model = NoteBook
+#         fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
+#                   "hard_disk", "operating_system", "screen", "price"]

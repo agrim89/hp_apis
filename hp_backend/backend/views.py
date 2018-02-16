@@ -81,7 +81,7 @@ class ListDetail(APIView):
             if date:
                 bpc = ProductDetails.objects.filter(modified__gte=date).values('id', 'category','product', 'part_no', "specification_details",
                                                                              "processor", "screen_size", "warranty", "ram",
-                                                                             "hard_disk", "operating_system", "screen",
+                                                                             "hard_disk", "operating_system", "screen", "odd", "graphics",
                                                                              "price", "data_sheet", "image_url", "status")
                 payload['product'] = bpc
 
@@ -89,7 +89,7 @@ class ListDetail(APIView):
             else:
                 bpc = ProductDetails.objects.all().values('id','category','product', 'part_no', "specification_details", "processor",
                                                       "screen_size", "warranty", "ram", "hard_disk", "operating_system",
-                                                      "screen", "price", "data_sheet", "image_url", "status")
+                                                      "screen", "price", "data_sheet", "image_url", "status", "image_url", "status")
                 payload['product'] = bpc
 
                 return Response(

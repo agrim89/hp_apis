@@ -120,7 +120,25 @@ class LoginVerify(APIView):
         except Exception:
             return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
 
-    def put(self, request):
+
+class ForgotPassword(APIView):
+    def post(self, request):
+        try:
+            username = request.data["username"]
+            user = BaseUser.objects.get(email=username)
+            email = EmailMessage('HP Password Request',
+                                 'Please find the below password for {username} and password is {password}'\
+                                 .format(username=user.username,password=user.password), to=[user.email])
+            email.send()
+
+            return Response(dict(payload={}, message="Email Sent", status=status.HTTP_200_OK))
+        except Exception:
+            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
+
+
+class ChangePassword(APIView):
+
+    def post(self, request):
         try:
             payload = dict()
             id = request.data["id"]
@@ -136,18 +154,3 @@ class LoginVerify(APIView):
 
         except Exception:
             return Response(dict(payload={}, message="Password Reset Failed", status=status.HTTP_404_NOT_FOUND))
-
-
-class ForgotPassword(APIView):
-    def post(self, request):
-        try:
-            username = request.data["username"]
-            user = BaseUser.objects.get(email=username)
-            email = EmailMessage('HP Password Request',
-                                 'Please find the below password for {username} and password is {password}'\
-                                 .format(username=user.username,password=user.password), to=[user.email])
-            email.send()
-
-            return Response(dict(payload={}, message="Email Sent", status=status.HTTP_200_OK))
-        except Exception:
-            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))

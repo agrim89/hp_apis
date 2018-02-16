@@ -153,4 +153,4 @@ class ChangePassword(APIView):
                 return Response(dict(payload=payload, message="Check Password again", status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION))
 
         except Exception:
-            return Response(dict(payload={}, message="Password Reset Failed", status=status.HTTP_404_NOT_FOUND))
+            return Response(dict(payload={}, message="Password Reset Failed", status=status.HTTP_204_NO_CONTENT))

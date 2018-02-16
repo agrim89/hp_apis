@@ -7,10 +7,11 @@ from .models import BaseUser, Company, ProductDetails
 
 class BaseUserAdmin(admin.ModelAdmin):
     form = BaseUserForm
-    fields = [('first_name', 'last_name'), ("email", "username"),'password', "dealer_name", "mobile",
+    fields = [('first_name', 'last_name'), ("email", "username"), "dealer_name", "mobile",
               "address", "gender", "is_active"]
     list_display = ('username', 'is_active',)
     list_filter = ('is_active',)
+
 
 
 class CompanyAdmin(admin.ModelAdmin):

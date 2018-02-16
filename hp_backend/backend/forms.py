@@ -6,7 +6,7 @@ class BaseUserForm(django.forms.ModelForm):
 
     class Meta:
         model = BaseUser
-        fields = ['first_name', 'last_name', "email", 'password', "username", "dealer_name", "mobile",
+        fields = ['first_name', 'last_name', "email", "username", "dealer_name", "mobile",
                   "address", "gender"]
 
 

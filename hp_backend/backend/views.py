@@ -120,6 +120,23 @@ class LoginVerify(APIView):
         except Exception:
             return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
 
+    def put(self, request):
+        try:
+            payload = dict()
+            username = request.data["username"]
+            password = request.data["password"]
+            change_password = request.data["new_password"]
+            user = BaseUser.objects.get(email=username)
+            if user.check_password(password):
+                user.set_password(change_password)
+                user.save()
+                return Response(dict(payload=payload, message="Password Reset Successful", status=status.HTTP_200_OK))
+            else:
+                return Response(dict(payload=payload, message="Check Password again", status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION))
+
+        except Exception:
+            return Response(dict(payload={}, message="Password Reset Failed", status=status.HTTP_404_NOT_FOUND))
+
 
 class ForgotPassword(APIView):
     def post(self, request):

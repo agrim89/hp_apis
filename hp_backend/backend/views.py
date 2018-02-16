@@ -106,19 +106,22 @@ class LoginVerify(APIView):
             payload = dict()
             username = request.data["username"]
             password = request.data["password"]
-            user = BaseUser.objects.get(email=username, password=password)
-            payload['id'] = user.id
-            payload['name'] = user.get_full_name()
-            payload['username'] = user.username
-            payload['email'] = user.email
-            payload['dealer_name'] = user.dealer_name
-            payload['mobile'] = user.mobile
-            payload['address'] = user.address
-            payload['gender'] = user.gender
+            user = BaseUser.objects.get(email=username)
+            if user.check_password(password):
+                payload['id'] = user.id
+                payload['name'] = user.get_full_name()
+                payload['username'] = user.username
+                payload['email'] = user.email
+                payload['dealer_name'] = user.dealer_name
+                payload['mobile'] = user.mobile
+                payload['address'] = user.address
+                payload['gender'] = user.gender
 
-            return Response(dict(payload=payload, message="User Found", status=status.HTTP_200_OK))
+                return Response(dict(payload=payload, message="User Found", status=status.HTTP_200_OK))
+            else:
+                return Response(dict(payload={}, message="Please check password", status=status.HTTP_204_NO_CONTENT))
         except Exception:
-            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
+            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_205_RESET_CONTENT))
 
 
 class ForgotPassword(APIView):

@@ -123,10 +123,10 @@ class LoginVerify(APIView):
     def put(self, request):
         try:
             payload = dict()
-            username = request.data["username"]
+            id = request.data["id"]
             password = request.data["password"]
             change_password = request.data["new_password"]
-            user = BaseUser.objects.get(id=int(username))
+            user = BaseUser.objects.get(id=int(id))
             if user.check_password(password):
                 user.set_password(change_password)
                 user.save()

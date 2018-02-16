@@ -5,6 +5,7 @@ from .models import Company, BaseUser, ProductDetails
 from .serializers import BaseUserSerializer, CompanySerializer
 import datetime
 from django.core.mail import EmailMessage
+from django.contrib.auth.models import User
 
 
 class UserDetail(APIView):
@@ -102,6 +103,7 @@ class ListDetail(APIView):
 
 class LoginVerify(APIView):
     def post(self, request):
+
         try:
             payload = dict()
             username = request.data["username"]
@@ -127,8 +129,9 @@ class LoginVerify(APIView):
 class ForgotPassword(APIView):
     def post(self, request):
         try:
+
             username = request.data["username"]
-            user = BaseUser.objects.get(email=username)
+            user = User.objects.get(email=username)
             email = EmailMessage('HP Password Request',
                                  'Please find the below password for {username} and password is {password}'\
                                  .format(username=user.username,password=user.password), to=[user.email])
@@ -147,7 +150,7 @@ class ChangePassword(APIView):
             id = request.data["id"]
             password = request.data["password"]
             change_password = request.data["new_password"]
-            user = BaseUser.objects.get(id=int(id))
+            user = User.objects.get(id=int(id))
             if user.check_password(password):
                 user.set_password(change_password)
                 user.save()

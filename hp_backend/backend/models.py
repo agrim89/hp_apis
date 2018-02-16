@@ -73,6 +73,7 @@ class ProductDetails(models.Model):
     modified = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
     image_url = models.URLField(max_length=1000)
+    # pdf_url = models.URLField(max_length=1000)
     def save(self, *args, **kwargs):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if self.created:

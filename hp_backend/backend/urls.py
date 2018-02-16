@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^company/', views.CompanyDetail.as_view()),
     url(r'^retrieve/', views.ListDetail.as_view()),
     url(r'^validate/', views.LoginVerify.as_view()),
+    url(r'^forgot_password/', views.ForgotPassword.as_view()),
 ]

@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .models import Company, BaseUser, ProductDetails
 from .serializers import BaseUserSerializer, CompanySerializer
 import datetime
+from django.core.mail import EmailMessage
 
 
 class UserDetail(APIView):
@@ -82,31 +83,14 @@ class ListDetail(APIView):
                                                                              "processor", "screen_size", "warranty", "ram",
                                                                              "hard_disk", "operating_system", "screen",
                                                                              "price")
-                # work = WorkStation.objects.filter(modified__gte=date).values('id', 'product', 'part_no',
-                #                                                                "specification_details", "processor",
-                #                                                                'graphics', "warranty", "ram", "hard_disk",
-                #                                                                "odd", "price")
-                # note = NoteBook.objects.filter(modified__gte=date).values('id','product', 'part_no', "specification_details",
-                #                                                             "processor", "screen_size", "warranty", "ram",
-                #                                                             "hard_disk", "operating_system", "screen",
-                #                                                             "price")
                 payload['product'] = bpc
-                # payload['notebook'] = note
-                # payload['workbook'] = work
 
                 return Response(dict(payload=payload, status=status.HTTP_200_OK, time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
             else:
                 bpc = ProductDetails.objects.all().values('id','category','product', 'part_no', "specification_details", "processor",
                                                       "screen_size", "warranty", "ram", "hard_disk", "operating_system",
                                                       "screen", "price")
-                # work = WorkStation.objects.all().values('id','product', 'part_no', "specification_details", "processor",
-                #                                         'graphics', "warranty", "ram", "hard_disk", "odd", "price")
-                # note = NoteBook.objects.all().values('id','product', 'part_no', "specification_details", "processor",
-                #                                      "screen_size", "warranty", "ram", "hard_disk", "operating_system",
-                #                                      "screen", "price")
                 payload['product'] = bpc
-                # payload['notebook'] = note
-                # payload['workbook'] = work
 
                 return Response(
                     dict(payload=payload, status=status.HTTP_200_OK, time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"))
@@ -122,7 +106,7 @@ class LoginVerify(APIView):
             payload = dict()
             username = request.data["username"]
             password = request.data["password"]
-            user = BaseUser.objects.get(username=username, password=password)
+            user = BaseUser.objects.get(email=username, password=password)
             payload['id'] = user.id
             payload['name'] = user.get_full_name()
             payload['username'] = user.username
@@ -133,5 +117,22 @@ class LoginVerify(APIView):
             payload['gender'] = user.gender
 
             return Response(dict(payload=payload, message="User Found", status=status.HTTP_200_OK))
+        except Exception:
+            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
+
+
+class ForgotPassword(APIView):
+    def post(self, request):
+        import pdb;pdb.set_trace()
+        try:
+            username = request.data["username"]
+            user = BaseUser.objects.get(email=username)
+            email = EmailMessage('HP Password Request',
+                                 'Please find the below password for {username} and password is {password}'\
+                                 .format(username=user.username,password=user.password), to=['agrim.sharma@sirez.com'])
+            email.send()
+
+            return Response(dict(payload={}, message="User Found", status=status.HTTP_200_OK))
+
         except Exception:
             return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))

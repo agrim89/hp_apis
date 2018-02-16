@@ -123,7 +123,6 @@ class LoginVerify(APIView):
 
 class ForgotPassword(APIView):
     def post(self, request):
-        import pdb;pdb.set_trace()
         try:
             username = request.data["username"]
             user = BaseUser.objects.get(email=username)
@@ -132,7 +131,6 @@ class ForgotPassword(APIView):
                                  .format(username=user.username,password=user.password), to=[user.email])
             email.send()
 
-            return Response(dict(payload={}, message="User Found", status=status.HTTP_200_OK))
-
+            return Response(dict(payload={}, message="Email Sent", status=status.HTTP_200_OK))
         except Exception:
             return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))

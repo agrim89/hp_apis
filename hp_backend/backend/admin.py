@@ -24,7 +24,7 @@ class CompanyAdmin(admin.ModelAdmin):
 class ProductDetailsAdmin(admin.ModelAdmin):
     form = ProductDetailsForm
     fields = ['category','product', 'part_no', "specification_details", "processor", "screen_size", "warranty",
-              "ram", "hard_disk", "operating_system", "screen",'odd', 'graphics', "price", "image_url", "status"]
+              "ram", "hard_disk", "operating_system", "screen",'odd', 'graphics', "price", "data_sheet", "image_url", "status"]
 
     list_display = ('category', 'product', "processor", "hard_disk", "ram", 'price', "modified")
     list_filter = ('category', 'ram', "processor", "hard_disk")

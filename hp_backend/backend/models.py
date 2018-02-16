@@ -66,14 +66,15 @@ class ProductDetails(models.Model):
     hard_disk = models.CharField(max_length=1000)
     operating_system = models.CharField(max_length=1000, null=True, blank=True)
     screen = models.CharField(max_length=1000, null=True, blank=True)
-    price = models.CharField(max_length=1000)
+    price = models.IntegerField()
     graphics = models.CharField(max_length=1000, null=True, blank=True)
     odd = models.CharField(max_length=1000, null=True, blank=True)
     created = models.CharField(max_length=100)
     modified = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
     image_url = models.URLField(max_length=1000)
-    # pdf_url = models.URLField(max_length=1000)
+    data_sheet = models.URLField(max_length=1000)
+
     def save(self, *args, **kwargs):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if self.created:

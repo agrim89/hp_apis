@@ -132,9 +132,12 @@ class ForgotPassword(APIView):
 
             username = request.data["username"]
             user = User.objects.get(email=username)
+            password = User.objects.make_random_password()
+            user.set_password(password)
+            user.save()
             email = EmailMessage('HP Password Request',
                                  'Please find the below password for {username} and password is {password}'\
-                                 .format(username=user.username,password=user.password), to=[user.email])
+                                 .format(username=user.username, password=password), to=[user.email])
             email.send()
 
             return Response(dict(payload={}, message="Email Sent", status=status.HTTP_200_OK))

@@ -9,9 +9,8 @@ class BaseUserAdmin(admin.ModelAdmin):
     form = BaseUserForm
     fields = [('first_name', 'last_name'), ("email", "username"), "dealer_name", "mobile",
               "address", "gender", "is_active"]
-    list_display = ('username', 'is_active',)
-    list_filter = ('is_active',)
-
+    list_display = ('username', 'is_active','last_login', 'login_count')
+    list_filter = ('is_active', 'login_count')
 
 
 class CompanyAdmin(admin.ModelAdmin):

@@ -119,6 +119,9 @@ class LoginVerify(APIView):
                 payload['address'] = user.address
                 payload['gender'] = user.gender
 
+                user.last_login = datetime.datetime.now()
+                user.login_count += 1
+                user.save()
                 return Response(dict(payload=payload, message="User Found", status=status.HTTP_200_OK))
             else:
                 return Response(dict(payload={}, message="Please check password", status=status.HTTP_204_NO_CONTENT))

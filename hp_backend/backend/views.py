@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Partner, PartnerSalesTeam, Product
+from .models import Partner, PartnerSalesTeam, Product, Category
 from .serializers import BaseUserSerializer, CompanySerializer
 import datetime
 from django.core.mail import EmailMessage
@@ -86,7 +86,9 @@ class ListDetail(APIView):
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
                                                                         "price", "data_sheet", "image_url", "status")
+                category = Category.objects.all().values('id', 'name')
                 payload['product'] = bpc
+                payload['category'] = category
 
                 return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                      time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
@@ -96,8 +98,9 @@ class ListDetail(APIView):
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
                                                                         "price", "data_sheet", "image_url", "status")
+                category = Category.objects.all().values('id', 'name')
                 payload['product'] = bpc
-
+                payload['category'] = category
                 return Response(
                     dict(payload=payload, status=status.HTTP_200_OK,
                          time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"))

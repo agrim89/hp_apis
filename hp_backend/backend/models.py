@@ -62,16 +62,16 @@ class PartnerSalesTeam(User):
     def __unicode__(self):
         return "{} : {}".format(self.username, self.dealer_name.company_name)
 
-    def save(self, *args, **kwargs):
-        if self.last_login:
-            self.login_count += 1
-            now = datetime.datetime.now()
-            self.last_login = now
-        else:
-            self.login_count = 0
-            now = datetime.datetime.now()
-            self.last_login = now
-        super(PartnerSalesTeam, self).save()
+    # def save(self, *args, **kwargs):
+    #     if self.last_login:
+    #         self.login_count += 1
+    #         now = datetime.datetime.now()
+    #         self.last_login = now
+    #     else:
+    #         self.login_count = 0
+    #         now = datetime.datetime.now()
+    #         self.last_login = now
+    #     super(PartnerSalesTeam, self).save()
 
 
 class Product(models.Model):

@@ -81,7 +81,7 @@ class ListDetail(APIView):
             date = request.data["date"]
             payload = dict()
             if date:
-                bpc = Product.objects.filter(modified__gte=date).values('id', 'category','product', 'part_no',
+                bpc = Product.objects.filter(modified__gte=date).values('id', 'category__name', 'product', 'part_no',
                                                                         "specification_details", "processor",
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
@@ -91,7 +91,7 @@ class ListDetail(APIView):
                 return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                      time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
             else:
-                bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'product', 'part_no',
+                bpc = Product.objects.filter(modified__gte=date).values('id', 'category__name', 'product', 'part_no',
                                                                         "specification_details", "processor",
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
@@ -120,7 +120,7 @@ class LoginVerify(APIView):
                 payload['name'] = user.get_full_name()
                 payload['username'] = user.username
                 payload['email'] = user.email
-                payload['dealer_name'] = user.dealer_name
+                payload['dealer_name'] = user.dealer_name.company_name
                 payload['mobile'] = user.mobile
                 payload['address'] = user.address
                 payload['gender'] = user.gender
@@ -138,9 +138,9 @@ class LoginVerify(APIView):
 class ForgotPassword(APIView):
     def post(self, request):
         try:
-
+            import pdb;pdb.set_trace()
             username = request.data["username"]
-            user = User.objects.get(email=username)
+            user = PartnerSalesTeam.objects.get(email=username)
             password = User.objects.make_random_password()
             user.set_password(password)
             user.save()

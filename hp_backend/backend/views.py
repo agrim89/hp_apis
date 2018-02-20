@@ -81,8 +81,8 @@ class ListDetail(APIView):
             date = request.data["date"]
             payload = dict()
             if date:
-                bpc = Product.objects.filter(modified__gte=date).values('id', 'category__name', 'product', 'part_no',
-                                                                        "specification_details", "processor",
+                bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name','product'
+                                                                        , 'part_no',"specification_details", "processor",
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
                                                                         "price", "data_sheet", "image_url", "status")
@@ -91,7 +91,7 @@ class ListDetail(APIView):
                 return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                      time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
             else:
-                bpc = Product.objects.filter(modified__gte=date).values('id', 'category__name', 'product', 'part_no',
+                bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name', 'product', 'part_no',
                                                                         "specification_details", "processor",
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",

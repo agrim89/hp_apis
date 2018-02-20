@@ -13,7 +13,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
-        ordering = ['-name']
+        ordering = ['name']
         verbose_name_plural = "Category"
 
     def __str__(self):
@@ -39,10 +39,10 @@ class Partner(models.Model):
         verbose_name_plural = "Partner"
 
     def __str__(self):
-        return "{} : {}".format(self.company_name, self.domain_name)
+        return "{}".format(self.company_name)
 
     def __unicode__(self):
-        return "{} : {}".format(self.company_name, self.domain_name)
+        return "{}".format(self.company_name)
 
 
 class PartnerSalesTeam(User):
@@ -57,10 +57,10 @@ class PartnerSalesTeam(User):
         verbose_name_plural = "PartnerSalesTeam"
 
     def __str__(self):
-        return "{} : {}".format(self.username, self.dealer_name)
+        return "{} : {}".format(self.username, self.dealer_name.company_name)
 
     def __unicode__(self):
-        return "{} : {}".format(self.username, self.dealer_name)
+        return "{} : {}".format(self.username, self.dealer_name.company_name)
 
     def save(self, *args, **kwargs):
         if self.last_login:

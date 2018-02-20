@@ -11,6 +11,7 @@ class BaseUserAdmin(admin.ModelAdmin):
               "address", "gender", "is_active"]
     list_display = ('username', 'is_active','last_login', 'login_count')
     list_filter = ('is_active', 'login_count')
+    search_fields = ['email', 'username']
 
 
 class CompanyAdmin(admin.ModelAdmin):
@@ -18,12 +19,14 @@ class CompanyAdmin(admin.ModelAdmin):
     fields = ['company_name', 'domain_name', "partner_id", 'region', "location", "dedicated_person", "mobile", ]
     list_display = ('company_name', 'domain_name',)
     list_filter = ('status',)
+    search_fields = ['company_name']
 
 
 class ProductDetailsAdmin(admin.ModelAdmin):
     form = ProductDetailsForm
     fields = ['category','product', 'part_no', "specification_details", "processor", "screen_size", "warranty",
-              "ram", "hard_disk", "operating_system", "screen",'odd', 'graphics', "price", "data_sheet", "image_url", "status"]
+              "ram", "hard_disk", "operating_system", "screen",'odd', 'graphics', "price", "data_sheet", "image_url",
+              "status"]
 
     list_display = ('category', 'product', "processor", "hard_disk", "ram", 'price', "modified")
     list_filter = ('category', 'ram', "processor", "hard_disk")

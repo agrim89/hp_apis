@@ -184,6 +184,10 @@ class ChangePassword(APIView):
                 user.set_password(change_password)
                 user.save()
                 return Response(dict(payload=payload, message="Password Reset Successful", status=status.HTTP_200_OK))
+            elif user.password == password:
+                user.set_password(change_password)
+                user.save()
+                return Response(dict(payload=payload, message="Password Reset Successful", status=status.HTTP_200_OK))
             else:
                 return Response(dict(payload=payload, message="Check Password again",
                                      status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION))

@@ -50,7 +50,7 @@ class PartnerSalesTeam(User):
     mobile = models.CharField(max_length=10)
     address = models.CharField(max_length=1000)
     gender = models.CharField(choices=gender, max_length=10)
-    login_count = models.IntegerField()
+    login_count = models.IntegerField(default=0)
 
     class Meta:
         ordering = ('email',)

@@ -115,7 +115,7 @@ class LoginVerify(APIView):
             username = request.data["username"]
             password = request.data["password"]
             user = PartnerSalesTeam.objects.get(email=username, is_active=True)
-            if user.check_password(password):
+            if user.password == password:
                 payload['id'] = user.id
                 payload['name'] = user.get_full_name()
                 payload['username'] = user.username

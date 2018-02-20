@@ -37,7 +37,7 @@ class ProductDetailsAdmin(admin.ModelAdmin):
 
     list_display = ('category', 'product', "processor", "hard_disk", "ram", 'price', "modified")
     list_filter = ('category', 'ram', "processor", "hard_disk")
-    search_fields = ['product', 'processor', 'hard_disk', 'ram']
+    search_fields = ['product']
 
 
 class HewlettPackardAdminSite(AdminSite):
@@ -55,3 +55,5 @@ admin_site.register(PartnerSalesTeam, BaseUserAdmin)
 admin_site.register(Partner, CompanyAdmin)
 admin_site.register(Product, ProductDetailsAdmin)
 admin_site.register(Category, CategoryAdmin)
+# admin_site.register(NoteBook, NoteBookAdmin)
+# admin_site.register(WorkStation, WorkStationAdmin)

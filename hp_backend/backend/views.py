@@ -138,7 +138,6 @@ class LoginVerify(APIView):
 class ForgotPassword(APIView):
     def post(self, request):
         try:
-            import pdb;pdb.set_trace()
             username = request.data["username"]
             user = PartnerSalesTeam.objects.get(email=username)
             password = User.objects.make_random_password()

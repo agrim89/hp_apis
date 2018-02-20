@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Company, BaseUser, ProductDetails
+from .models import Partner, PartnerSalesTeam, Product
 from .serializers import BaseUserSerializer, CompanySerializer
 import datetime
 from django.core.mail import EmailMessage
@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 class UserDetail(APIView):
 
     def get(self, request):
-        snippets = BaseUser.objects.all()
+        snippets = PartnerSalesTeam.objects.all()
         serializer = BaseUserSerializer(snippets, many=True)
         return Response(serializer.data)
 
@@ -24,7 +24,7 @@ class UserDetail(APIView):
 
     def put(self, request):
         try:
-            user = BaseUser.objects.get(username=request.data['username'])
+            user = PartnerSalesTeam.objects.get(username=request.data['username'])
             user.first_name = request.data['first_name'] if request.data['first_name'] else user.first_name
             user.last_name = request.data['last_name'] if request.data['last_name'] else user.last_name
             user.username = request.data['username'] if request.data['username'] else user.username
@@ -35,7 +35,7 @@ class UserDetail(APIView):
             user.gender = request.data['gender'] if request.data['gender'] else user.gender
 
             user.save()
-            return Response(BaseUserSerializer(user).data, status=status.HTTP_202_ACCEPTED )
+            return Response(BaseUserSerializer(user).data, status=status.HTTP_202_ACCEPTED)
         except Exception:
             return Response(status='User Not Found')
 
@@ -43,7 +43,7 @@ class UserDetail(APIView):
 class CompanyDetail(APIView):
 
     def get(self, request, format=None):
-        snippets = Company.objects.all()
+        snippets = Partner.objects.all()
         serializer = CompanySerializer(snippets, many=True)
         return Response(serializer.data)
 
@@ -56,13 +56,14 @@ class CompanyDetail(APIView):
 
     def put(self, request):
         try:
-            user = Company.objects.get(company_namer=request.data['company_name'])
+            user = Partner.objects.get(company_namer=request.data['company_name'])
             user.company_name = request.data['company_name'] if request.data['company_name'] else user.company_name
             user.domain_name = request.data['domain_name'] if request.data['domain_name'] else user.domain_name
             user.partner_id = request.data['partner_id'] if request.data['partner_id'] else user.partner_id
             user.region = request.data['region'] if request.data['region'] else user.region
             user.location = request.data['location'] if request.data['location'] else user.location
-            user.dedicated_person = request.data['dedicated_person'] if request.data['dedicated_person'] else user.dedicated_person
+            user.dedicated_person = request.data['dedicated_person'] if request.data['dedicated_person'] \
+                else user.dedicated_person
             user.email_id = request.data['email_id'] if request.data['email_id'] else user.email_id
             user.mobile = request.data['mobile'] if request.data['mobile'] else user.mobile
 
@@ -80,21 +81,26 @@ class ListDetail(APIView):
             date = request.data["date"]
             payload = dict()
             if date:
-                bpc = ProductDetails.objects.filter(modified__gte=date).values('id', 'category','product', 'part_no', "specification_details",
-                                                                             "processor", "screen_size", "warranty", "ram",
-                                                                             "hard_disk", "operating_system", "screen", "odd", "graphics",
-                                                                             "price", "data_sheet", "image_url", "status")
+                bpc = Product.objects.filter(modified__gte=date).values('id', 'category','product', 'part_no',
+                                                                        "specification_details", "processor",
+                                                                        "screen_size", "warranty", "ram", "hard_disk",
+                                                                        "operating_system", "screen", "odd", "graphics",
+                                                                        "price", "data_sheet", "image_url", "status")
                 payload['product'] = bpc
 
-                return Response(dict(payload=payload, status=status.HTTP_200_OK, time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
+                return Response(dict(payload=payload, status=status.HTTP_200_OK,
+                                     time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
             else:
-                bpc = ProductDetails.objects.all().values('id','category','product', 'part_no', "specification_details", "processor",
-                                                      "screen_size", "warranty", "ram", "hard_disk", "operating_system",
-                                                      "screen", "price", "data_sheet", "image_url", "status", "image_url", "status")
+                bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'product', 'part_no',
+                                                                        "specification_details", "processor",
+                                                                        "screen_size", "warranty", "ram", "hard_disk",
+                                                                        "operating_system", "screen", "odd", "graphics",
+                                                                        "price", "data_sheet", "image_url", "status")
                 payload['product'] = bpc
 
                 return Response(
-                    dict(payload=payload, status=status.HTTP_200_OK, time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"))
+                    dict(payload=payload, status=status.HTTP_200_OK,
+                         time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"))
         except KeyError:
             return Response(
                 dict(payload={}, status=status.HTTP_204_NO_CONTENT, time=datetime.datetime.now(),
@@ -108,7 +114,7 @@ class LoginVerify(APIView):
             payload = dict()
             username = request.data["username"]
             password = request.data["password"]
-            user = BaseUser.objects.get(email=username)
+            user = PartnerSalesTeam.objects.get(email=username, is_active=True)
             if user.check_password(password):
                 payload['id'] = user.id
                 payload['name'] = user.get_full_name()
@@ -143,7 +149,8 @@ class ForgotPassword(APIView):
                                  .format(username=user.username, password=password), to=[user.email])
             email.send()
 
-            return Response(dict(payload={}, message="Email Sent", status=status.HTTP_200_OK))
+            return Response(dict(payload={}, message="Your password has been sent to your registered email.",
+                                 status=status.HTTP_200_OK))
         except Exception:
             return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
 
@@ -162,7 +169,8 @@ class ChangePassword(APIView):
                 user.save()
                 return Response(dict(payload=payload, message="Password Reset Successful", status=status.HTTP_200_OK))
             else:
-                return Response(dict(payload=payload, message="Check Password again", status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION))
+                return Response(dict(payload=payload, message="Check Password again",
+                                     status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION))
 
         except Exception:
             return Response(dict(payload={}, message="Password Reset Failed", status=status.HTTP_204_NO_CONTENT))

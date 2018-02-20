@@ -1,13 +1,20 @@
 import django.forms
-from .models import BaseUser, Company, ProductDetails
+from .models import PartnerSalesTeam, Product, Partner, Category
 
 
 class BaseUserForm(django.forms.ModelForm):
 
     class Meta:
-        model = BaseUser
+        model = PartnerSalesTeam
         fields = ['first_name', 'last_name', "email", "username", "dealer_name", "mobile",
                   "address", "gender"]
+
+
+class CategoryForm(django.forms.ModelForm):
+
+    class Meta:
+        model = Category
+        fields = ['name',]
 
 
 class CompanyForm(django.forms.ModelForm):
@@ -15,7 +22,7 @@ class CompanyForm(django.forms.ModelForm):
     User form
     """
     class Meta:
-        model = Company
+        model = Partner
         fields = ['company_name', 'domain_name', "partner_id", 'region', "location", "dedicated_person", "mobile",]
 
 
@@ -24,25 +31,6 @@ class ProductDetailsForm(django.forms.ModelForm):
     User form
     """
     class Meta:
-        model = ProductDetails
+        model = Product
         fields = ['category', 'product', 'part_no', "specification_details", "processor", "screen_size", "warranty",
                   "ram", "hard_disk", "operating_system", "screen", 'odd', 'graphics', "price", "image_url", "status"]
-#
-# class BusinessPCForm(django.forms.ModelForm):
-#     """
-#     User form
-#     """
-#     class Meta:
-#         model = BusinessPC
-#         fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
-#                   "hard_disk", "operating_system", "screen", "price"]
-#
-#
-# class NoteBookForm(django.forms.ModelForm):
-#     """
-#     User form
-#     """
-#     class Meta:
-#         model = NoteBook
-#         fields = ['product', 'part_no', "specification_details", "processor", "screen_size", "warranty", "ram",
-#                   "hard_disk", "operating_system", "screen", "price"]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BaseUser, Company
+from .models import PartnerSalesTeam, Partner
 
 Gender = ("male", "female")
 
@@ -19,7 +19,7 @@ class BaseUserSerializer(serializers.Serializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        return BaseUser.objects.create(**validated_data)
+        return PartnerSalesTeam.objects.create(**validated_data)
 
 
 class CompanySerializer(serializers.Serializer):
@@ -37,4 +37,4 @@ class CompanySerializer(serializers.Serializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        return Company.objects.create(**validated_data)
+        return Partner.objects.create(**validated_data)

@@ -96,7 +96,7 @@ class Product(models.Model):
     data_sheet = models.URLField(max_length=1000)
 
     class Meta:
-        ordering = ('category',)
+        ordering = ('product',)
         verbose_name_plural = "Product"
 
     def save(self, *args, **kwargs):

@@ -16,8 +16,8 @@ class BaseUserAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
-    fields = ["name"]
-    list_display = ("name",)
+    fields = ["name", 'status']
+    list_display = ("name", 'status')
     search_fields = ['name']
 
 

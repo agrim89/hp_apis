@@ -11,6 +11,17 @@ gender = (
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    created = models.CharField(max_length=100, null=True, blank=True)
+    modified = models.CharField(max_length=100, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if self.created:
+            self.modified = now
+        else:
+            self.modified = now
+            self.created = now
+        return super(Category, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['name']
@@ -61,17 +72,6 @@ class PartnerSalesTeam(User):
 
     def __unicode__(self):
         return "{} : {}".format(self.username, self.dealer_name.company_name)
-
-    # def save(self, *args, **kwargs):
-    #     if self.last_login:
-    #         self.login_count += 1
-    #         now = datetime.datetime.now()
-    #         self.last_login = now
-    #     else:
-    #         self.login_count = 0
-    #         now = datetime.datetime.now()
-    #         self.last_login = now
-    #     super(PartnerSalesTeam, self).save()
 
 
 class Product(models.Model):

@@ -86,7 +86,7 @@ class ListDetail(APIView):
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
                                                                         "price", "data_sheet", "image_url", "status")
-                category = Category.objects.all().values('id', 'name')
+                category = Category.objects.filter(modified__gte=date).values('id', 'name')
                 payload['product'] = bpc
                 payload['category'] = category
 
@@ -98,7 +98,7 @@ class ListDetail(APIView):
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
                                                                         "price", "data_sheet", "image_url", "status")
-                category = Category.objects.all().values('id', 'name')
+                category = Category.objects.filter(modified__gte=date).values('id', 'name')
                 payload['product'] = bpc
                 payload['category'] = category
                 return Response(

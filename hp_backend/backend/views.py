@@ -93,12 +93,12 @@ class ListDetail(APIView):
                 return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                      time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
             else:
-                bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name', 'product', 'part_no',
+                bpc = Product.objects.all().values('id', 'category', 'category__name', 'product', 'part_no',
                                                                         "specification_details", "processor",
                                                                         "screen_size", "warranty", "ram", "hard_disk",
                                                                         "operating_system", "screen", "odd", "graphics",
                                                                         "price", "data_sheet", "image_url", "status")
-                category = Category.objects.filter(modified__gte=date).values('id', 'name')
+                category = Category.objects.all().values('id', 'name')
                 payload['product'] = bpc
                 payload['category'] = category
                 return Response(

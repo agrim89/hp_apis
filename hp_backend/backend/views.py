@@ -78,7 +78,7 @@ class ListDetail(APIView):
 
     def post(self, request):
         try:
-            if request.data['api_key'] == 'XXXYY':
+            if request.data['api_key'] == 'kzvXN896YE':
                 date = request.data["date"]
                 payload = dict()
                 if date:

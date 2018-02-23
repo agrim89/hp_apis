@@ -78,36 +78,42 @@ class ListDetail(APIView):
 
     def post(self, request):
         try:
-            date = request.data["date"]
-            payload = dict()
-            if date:
-                bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name','product'
-                                                                        , 'part_no',"specification_details", "processor",
-                                                                        "screen_size", "warranty", "ram", "hard_disk",
-                                                                        "operating_system", "screen", "odd", "graphics",
-                                                                        "price", "data_sheet", "image_url", "status")
-                category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
-                payload['product'] = bpc
-                payload['category'] = category
+            if request.data['api_key'] == 'XXXYY':
+                date = request.data["date"]
+                payload = dict()
+                if date:
+                    bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name','product'
+                                                                            , 'part_no',"specification_details", "processor",
+                                                                            "screen_size", "warranty", "ram", "hard_disk",
+                                                                            "operating_system", "screen", "odd", "graphics",
+                                                                            "price", "data_sheet", "image_url", "status")
+                    category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
+                    payload['product'] = bpc
+                    payload['category'] = category
 
-                return Response(dict(payload=payload, status=status.HTTP_200_OK,
-                                     time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
+                    return Response(dict(payload=payload, status=status.HTTP_200_OK,
+                                         time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
+                else:
+                    bpc = Product.objects.all().values('id', 'category', 'category__name', 'product', 'part_no',
+                                                                            "specification_details", "processor",
+                                                                            "screen_size", "warranty", "ram", "hard_disk",
+                                                                            "operating_system", "screen", "odd", "graphics",
+                                                                            "price", "data_sheet", "image_url", "status")
+                    category = Category.objects.all().values('id', 'name', 'status')
+                    payload['product'] = bpc
+                    payload['category'] = category
+                    return Response(
+                        dict(payload=payload, status=status.HTTP_200_OK,
+                             time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"),
+                        status=status.HTTP_200_OK)
             else:
-                bpc = Product.objects.all().values('id', 'category', 'category__name', 'product', 'part_no',
-                                                                        "specification_details", "processor",
-                                                                        "screen_size", "warranty", "ram", "hard_disk",
-                                                                        "operating_system", "screen", "odd", "graphics",
-                                                                        "price", "data_sheet", "image_url", "status")
-                category = Category.objects.all().values('id', 'name', 'status')
-                payload['product'] = bpc
-                payload['category'] = category
                 return Response(
-                    dict(payload=payload, status=status.HTTP_200_OK,
-                         time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"))
+                    dict(payload={}
+                         , message="Please provide correct API KEY"), status=status.HTTP_401_UNAUTHORIZED)
         except KeyError:
             return Response(
                 dict(payload={}, status=status.HTTP_204_NO_CONTENT, time=datetime.datetime.now(),
-                     message="Please select a date"))
+                     message="Please select a date"), status=status.HTTP_204_NO_CONTENT)
 
 
 class LoginVerify(APIView):

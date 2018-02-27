@@ -1,12 +1,14 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Partner, PartnerSalesTeam, Product, Category
 from .serializers import BaseUserSerializer, CompanySerializer
-import datetime
+import datetime, os
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
-
+from .report_api import ReportGenerator, CSVReportGenerator
+from django.conf import settings
 
 class UserDetail(APIView):
 
@@ -200,3 +202,59 @@ class ChangePassword(APIView):
 
         except Exception:
             return Response(dict(payload={}, message="Password Reset Failed", status=status.HTTP_204_NO_CONTENT))
+
+
+def report_api(request):
+    col_heads = ['S No', 'Name', 'Email', 'Dealer Name', 'No. of logged', 'Last Login']
+    report = ReportGenerator('tellecalling_report_{}.xlsx'.format(datetime.datetime.now().date()))
+    now = datetime.datetime.now().date()
+    last = now - datetime.timedelta(days=30)
+    active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
+    deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last)
+    active = user_data(active_user)
+    deactive = user_data(deactive_user)
+    report.write_header(["active user data",])
+    report.write_header(col_heads)
+    report.write_body(active)
+    report.write_header(["Deactive Users",])
+    report.write_body(deactive)
+    mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
+    mail.attach_file(os.path.join(settings.STATIC_ROOT, 'tellecalling_report_{}.xlsx'.\
+                                  format(datetime.datetime.now().date())))
+    mail.send()
+    return HttpResponse('Success')
+    
+    # response = HttpResponse(content_type="text/csv")
+    # response['Content-Disposition'] = "attachment; filename='report.csv'"
+    # with open('reports/report_{}.csv'.format(datetime.datetime.now()), 'w+') as writer:
+    #     writer = csv.writer(response)
+    #     writer.writerow(['Active Users last login with in a month'])
+    #     now = datetime.datetime.now().date()
+    #     last = now - datetime.timedelta(days=30)
+    #     writer.writerow(fields)
+    #     active = PartnerSalesTeam.objects.filter(last_login__gte=last)
+    #     deactive = PartnerSalesTeam.objects.filter(last_login__lte=last)
+    #     for i in range(len(active)):
+    #         writer.writerow([i+1, active[i].get_full_name(), active[i].email, active[i].dealer_name,
+    #                          active[i].login_count, active[i].last_login])
+    #
+    #         writer.writerow(['Deactive users last login greater than a month'])
+    #     for i in range(len(deactive)):
+    #         writer.writerow([i+1, deactive[i].get_full_name(), deactive[i].email, deactive[i].dealer_name,
+    #                          deactive[i].login_count, deactive[i].last_login])
+    #     mail = EmailMessage('subject', 'text', ['agrim.sharma@sirez.com'], ['agrim.sharma@sirez.com'])
+    #     mail.attach_file()
+    # return response
+
+
+def user_data(user):
+    data = []
+    for a in user:
+        i = 1
+        name = a.get_full_name()
+        email = a.email
+        dealer_name = a.dealer_name
+        login_count = a.login_count
+        last_login = a.last_login
+        data.append([i, name, email, dealer_name, login_count, last_login])
+    return data

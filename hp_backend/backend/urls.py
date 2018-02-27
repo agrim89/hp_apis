@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^validate/', views.LoginVerify.as_view()),
     url(r'^forgot_password/', views.ForgotPassword.as_view()),
     url(r'^change_password/', views.ChangePassword.as_view()),
+    url(r"^report/", views.report_api)
 ]

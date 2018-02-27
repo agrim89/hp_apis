@@ -205,7 +205,7 @@ class ChangePassword(APIView):
 
 
 def report_api(request):
-    col_heads = ['S No', 'Name', 'Email', 'Dealer Name', 'No. of logged', 'Last Login']
+    col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
     report_active = ReportGenerator('active_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
     report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
     now = datetime.datetime.now().date()
@@ -260,5 +260,4 @@ def user_data(user):
         last_login = datetime.datetime.strftime(a.last_login, "%Y-%m-%d")
         data.append([i, name, email, dealer_name, login_count, last_login])
         i += 1
-
     return data

@@ -223,7 +223,7 @@ def report_api(request):
     mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
     mail.attach_file(os.path.join(settings.STATIC_ROOT, 'active_user_report_{}.xlsx'.\
                                   format(datetime.datetime.now().date())))
-    mail.attach_file(os.path.join(settings.STATIC_ROOT,'deactive_user_report_{}.xlsx'.\
+    mail.attach_file(os.path.join(settings.STATIC_ROOT, 'deactive_user_report_{}.xlsx'.\
                                   format(datetime.datetime.now().date())))
     mail.send()
     return HttpResponse('Success')
@@ -255,10 +255,12 @@ def user_data(user):
     data = []
     for a in user:
         i = 1
-        name = a.get_full_name()
-        email = a.email
-        dealer_name = a.dealer_name
-        login_count = a.login_count
-        last_login = a.last_login
+        name = str(a.get_full_name())
+        email = str(a.email)
+        dealer_name = str(a.dealer_name)
+        login_count = str(a.login_count)
+        last_login = str(a.last_login)
         data.append([i, name, email, dealer_name, login_count, last_login])
+        i += 1
+
     return data

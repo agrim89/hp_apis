@@ -207,45 +207,22 @@ class ChangePassword(APIView):
 def report_api(request):
     col_heads = ['S No', 'Name', 'Email', 'Dealer Name', 'No. of logged', 'Last Login']
     report_active = ReportGenerator('active_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
-    report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
+    # report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
     now = datetime.datetime.now().date()
     last = now - datetime.timedelta(days=30)
     active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last)
     active = user_data(active_user)
-    deactive = user_data(deactive_user)
-    # report_active.write_header(["active user data",])
+    # deactive = user_data(deactive_user)
     report_active.write_header(col_heads)
-    report_deactive.write_header(col_heads)
-    for a in active_user:
-        i = 1
-        name = str(a.get_full_name())
-        email = str(a.email)
-        dealer_name = str(a.dealer_name)
-        login_count = str(a.login_count)
-        last_login = str(datetime.datetime.strftime(a.last_login, "%Y-%m-%d"))
-        # data.append([i, name, email, dealer_name, login_count, last_login])
-        # i += 1?
-        report_active.write_body([i, name, email, dealer_name, login_count, last_login])
-        i += 1
-    # report.write_header(["Deactive Users",])
-    for a in deactive_user:
-        i = 1
-        name = str(a.get_full_name())
-        email = str(a.email)
-        dealer_name = str(a.dealer_name)
-        login_count = str(a.login_count)
-        last_login = str(datetime.datetime.strftime(a.last_login, "%Y-%m-%d"))
-        # data.append([i, name, email, dealer_name, login_count, last_login])
-        # i += 1?
-        report_deactive.write_body([i, name, email, dealer_name, login_count, last_login])
-        i += 1
+    # report_deactive.write_header(col_heads)
+    report_active.write_body(active)
     # report_deactive.write_body(deactive)
     mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
     mail.attach_file(os.path.join(settings.STATIC_ROOT, 'active_user_report_{}.xlsx'.\
                                   format(datetime.datetime.now().date())))
-    mail.attach_file(os.path.join(settings.STATIC_ROOT, 'deactive_user_report_{}.xlsx'.\
-                                  format(datetime.datetime.now().date())))
+    # mail.attach_file(os.path.join(settings.STATIC_ROOT, 'deactive_user_report_{}.xlsx'.\
+    #                               format(datetime.datetime.now().date())))
     mail.send()
     return HttpResponse('Success')
 

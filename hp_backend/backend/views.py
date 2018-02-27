@@ -206,24 +206,28 @@ class ChangePassword(APIView):
 
 def report_api(request):
     col_heads = ['S No', 'Name', 'Email', 'Dealer Name', 'No. of logged', 'Last Login']
-    report = ReportGenerator('tellecalling_report_{}.xlsx'.format(datetime.datetime.now().date()))
+    report_active = ReportGenerator('active_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
+    report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
     now = datetime.datetime.now().date()
     last = now - datetime.timedelta(days=30)
     active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last)
     active = user_data(active_user)
     deactive = user_data(deactive_user)
-    report.write_header(["active user data",])
-    report.write_header(col_heads)
-    report.write_body(active)
-    report.write_header(["Deactive Users",])
-    report.write_body(deactive)
+    # report_active.write_header(["active user data",])
+    report_active.write_header(col_heads)
+    report_deactive.write_header(col_heads)
+    report_active.write_body(active)
+    # report.write_header(["Deactive Users",])
+    report_deactive.write_body(deactive)
     mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
-    mail.attach_file(os.path.join(settings.STATIC_ROOT, 'tellecalling_report_{}.xlsx'.\
+    mail.attach_file(os.path.join(settings.STATIC_ROOT, 'active_user_report_{}.xlsx'.\
+                                  format(datetime.datetime.now().date())))
+    mail.attach_file(os.path.join(settings.STATIC_ROOT,'deactive_user_report_{}.xlsx'.\
                                   format(datetime.datetime.now().date())))
     mail.send()
     return HttpResponse('Success')
-    
+
     # response = HttpResponse(content_type="text/csv")
     # response['Content-Disposition'] = "attachment; filename='report.csv'"
     # with open('reports/report_{}.csv'.format(datetime.datetime.now()), 'w+') as writer:

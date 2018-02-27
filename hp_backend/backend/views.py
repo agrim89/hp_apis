@@ -253,11 +253,11 @@ def user_data(user):
     data = []
     for a in user:
         i = 1
-        name = str(a.get_full_name())
-        email = str(a.email)
-        dealer_name = str(a.dealer_name)
-        login_count = str(a.login_count)
-        last_login = str(datetime.datetime.strftime(a.last_login, "%Y-%m-%d"))
+        name = a.get_full_name()
+        email = a.email
+        dealer_name = a.dealer_name
+        login_count = a.login_count
+        last_login = datetime.datetime.strftime(a.last_login, "%Y-%m-%d")
         data.append([i, name, email, dealer_name, login_count, last_login])
         i += 1
 

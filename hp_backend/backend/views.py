@@ -210,10 +210,10 @@ def report_api(request):
     report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
     now = datetime.datetime.now().date()
     last = now - datetime.timedelta(days=30)
-    active_user = PartnerSalesTeam.objects.filter(last_login__gte=last).values('first_name', 'email',
+    active_user = PartnerSalesTeam.objects.filter(last_login__gte=last).values_list('first_name', 'email',
                                                                                'dealer_name__company_name',
                                                                                'login_count', 'last_login')
-    deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last).values('first_name', 'email',
+    deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last).values_list('first_name', 'email',
                                                                                'dealer_name__company_name',
                                                                                'login_count', 'last_login')
     # active = user_data(active_user)

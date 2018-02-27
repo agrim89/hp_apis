@@ -255,7 +255,7 @@ def user_data(user):
         i = 1
         name = a.get_full_name()
         email = a.email
-        dealer_name = a.dealer_name.company_name
+        dealer_name = a.dealer_name.company_name.decode('utf-8')
         login_count = a.login_count
         last_login = datetime.datetime.strftime(a.last_login, "%Y-%m-%d")
         data.append([i, name, email, dealer_name, login_count, last_login])

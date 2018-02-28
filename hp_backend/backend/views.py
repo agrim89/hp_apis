@@ -274,6 +274,8 @@ def send_email(request):
         return HttpResponse('Success')
     else:
         return HttpResponse('Fail')
+
+
 def email():
     now = datetime.datetime.now()
     yest = now - datetime.timedelta(days=1)
@@ -297,15 +299,17 @@ def email():
     #                                     ))
     #                     )
 
-    html_content = render_to_string('mail_template.html', {"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
-                                                           "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
-                                                           "nosdyes": login_dyest,
-                                                           "uns_dyes": unique_dyes,
-                                                           "nosyes": login_yest,
-                                                           "pcn": pcn,
-                                                           "pchn": pchn,
-                                                           "uns_yes": unique_yes
-                                                           })
+    html_content = render_to_string('user/mail_template.html',
+                                    {
+                                        "yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
+                                        "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
+                                        "nosdyes": login_dyest,
+                                        "uns_dyes": unique_dyes,
+                                        "nosyes": login_yest,
+                                        "pcn": pcn,
+                                        "pchn": pchn,
+                                        "uns_yes": unique_yes
+                                        })
     text_content = strip_tags(html_content)
     # msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])
     msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])

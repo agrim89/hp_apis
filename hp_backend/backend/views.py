@@ -298,7 +298,7 @@ def send_email(request):
         #                                                        # "uns_yes": unique_yes
         #                                                        })
         # text_content = strip_tags(html_content)
-        msg = EmailMessage('Test', 'text_content', ['agrim.sharma@sirez.com'])
+        msg = EmailMessage('Test', 'text_content', to=['agrim.sharma@sirez.com'])
         # msg = EmailMultiAlternatives('Test', text_content, ['agrim.sharma@sirez.com'])
         # msg.attach_alternative(html_content, "text/html")
         msg.send()

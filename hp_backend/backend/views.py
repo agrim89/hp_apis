@@ -273,12 +273,12 @@ def send_email(request):
         now = datetime.datetime.now().date()
         yest = now - datetime.timedelta(days=1)
         dyes = now - datetime.timedelta(days=2)
-        login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
-        login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
-        unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
-        unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
-        pchn = (login_yest/login_dyest)*100 if login_dyest > 0 else 1
-        pcn = (unique_yes/unique_dyes)*100 if unique_dyes > 0 else 1
+        login_yest = len(PartnerSalesTeam.objects.filter(last_login=yest))
+        login_dyest = len(PartnerSalesTeam.objects.filter(last_login=dyes))
+        unique_yes = len(PartnerSalesTeam.objects.filter(login_count=1, last_login=yest))
+        unique_dyes = len(PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes))
+        pchn = (login_yest/login_dyest)*100 if login_dyest > 0 else 0
+        pcn = (unique_yes/unique_dyes)*100 if unique_dyes > 0 else 0
         html_content = render_to_string('mail_template.html', {"yest": yest,
                                                                "dyest": dyes,
                                                                "nosdyes": login_dyest,

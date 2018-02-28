@@ -268,6 +268,13 @@ def user_data(user):
 
 
 def send_email(request):
+    val = email()
+
+    if val:
+        return HttpResponse('Success')
+    else:
+        return HttpResponse('Fail')
+def email():
     now = datetime.datetime.now()
     yest = now - datetime.timedelta(days=1)
     dyes = now - datetime.timedelta(days=2)
@@ -277,54 +284,30 @@ def send_email(request):
     unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
     pchn = (login_yest / login_dyest) * 100 if login_dyest > 0 else 0
     pcn = (unique_yes / unique_dyes) * 100 if unique_dyes > 0 else 0
-    try:
-        # from django.core.mail import send_mail
+    # from django.core.mail import send_mail
 
-        # template = get_template('mail_template.html')
-        # context = {"yest": yest,"dyest": dyes,"nosdyes": login_dyest,"uns_dyes": unique_dyes,"nosyes": login_yest,"pcn": pcn,"pchn": pchn,"uns_yes": unique_yes}
-        # content = template.render(context)
-        # send_mail('HP user report', '', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_message=content)
-        # msg = EmailMessage('subject', 'content', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_)
-        # # msg.send()
-        # return HttpResponse(json.dumps(dict(payload={'test': datetime.datetime.strftime(now, '%Y-%m-%d')}, message="Email not Sent.",
-        #                                     status=status.HTTP_200_OK
-        #                                     ))
-        #                     )
+    # template = get_template('mail_template.html')
+    # context = {"yest": yest,"dyest": dyes,"nosdyes": login_dyest,"uns_dyes": unique_dyes,"nosyes": login_yest,"pcn": pcn,"pchn": pchn,"uns_yes": unique_yes}
+    # content = template.render(context)
+    # send_mail('HP user report', '', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_message=content)
+    # msg = EmailMessage('subject', 'content', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_)
+    # # msg.send()
+    # return HttpResponse(json.dumps(dict(payload={'test': datetime.datetime.strftime(now, '%Y-%m-%d')}, message="Email not Sent.",
+    #                                     status=status.HTTP_200_OK
+    #                                     ))
+    #                     )
 
-        html_content = render_to_string('mail_template.html', {"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
-                                                               "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
-                                                               "nosdyes": login_dyest,
-                                                               "uns_dyes": unique_dyes,
-                                                               "nosyes": login_yest,
-                                                               "pcn": pcn,
-                                                               "pchn": pchn,
-                                                               "uns_yes": unique_yes
-                                                               })
-        text_content = strip_tags(html_content)
-        msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])
-        # msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
-        # msg.attach_alternative(html_content, "text/html")
-        msg.send()
-        return HttpResponse(json.dumps(dict(payload={"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
-                                                               "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
-                                                               "nosdyes": login_dyest,
-                                                               "uns_dyes": unique_dyes,
-                                                               "nosyes": login_yest,
-                                                               "pcn": pcn,
-                                                               "pchn": pchn,
-                                                               "uns_yes": unique_yes
-                                                               }, message="Email Sent.",
-                                            status=status.HTTP_200_OK))
-                            )
-    except Exception:
-        return HttpResponse(json.dumps(dict(payload={"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
-                                                               "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
-                                                               "nosdyes": login_dyest,
-                                                               "uns_dyes": unique_dyes,
-                                                               "nosyes": login_yest,
-                                                               "pcn": pcn,
-                                                               "pchn": pchn,
-                                                               "uns_yes": unique_yes
-                                                               }, message="Email not Sent.",
-                                            status=status.HTTP_206_PARTIAL_CONTENT))
-                            )
+    html_content = render_to_string('mail_template.html', {"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
+                                                           "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
+                                                           "nosdyes": login_dyest,
+                                                           "uns_dyes": unique_dyes,
+                                                           "nosyes": login_yest,
+                                                           "pcn": pcn,
+                                                           "pchn": pchn,
+                                                           "uns_yes": unique_yes
+                                                           })
+    text_content = strip_tags(html_content)
+    # msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])
+    msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
+    msg.attach_alternative(html_content, "text/html")
+    return msg.send()

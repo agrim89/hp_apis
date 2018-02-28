@@ -12,6 +12,9 @@ from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 
 
+mail_list = ['vishal.jain@sirez.com', 'agrim.sharma@sirez.com']
+
+
 class UserDetail(APIView):
 
     def get(self, request):
@@ -312,7 +315,7 @@ def email():
                                         })
     text_content = strip_tags(html_content)
     # msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])
-    msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
+    msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', mail_list)
     msg.attach_alternative(html_content, "text/html")
     return msg.send()
 

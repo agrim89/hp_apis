@@ -295,4 +295,6 @@ def send_email(request):
                                             status=status.HTTP_200_OK))
                             )
     except Exception:
-        return HttpResponse(Exception)
+        return HttpResponse(json.dumps(dict(payload={}, message="Email not Sent.",
+                                            status=status.HTTP_206_PARTIAL_CONTENT))
+                            )

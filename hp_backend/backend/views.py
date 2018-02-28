@@ -223,7 +223,7 @@ def report_api(request):
     wr.writerows([["Date", "No. of Session", "Percentage Change", "Unique Sessions", "Percentage Change"]])
     row = [dyes, login_dyest, '', unique_dyes, '']
     wr.writerows([row])
-    if login_yest > 0:
+    if login_yest > 0 and unique_yes > 0:
         row = [yest, login_yest, (login_dyest/login_yest) * 100, unique_dyes, (unique_dyes/unique_yes) * 100]
     else:
         row = [yest, login_yest, (login_dyest / 1) * 100, unique_dyes, (unique_dyes / 1) * 100]

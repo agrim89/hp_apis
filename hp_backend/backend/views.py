@@ -312,7 +312,7 @@ def email():
                                         "pcn": pcn,
                                         "pchn": pchn,
                                         "uns_yes": unique_yes,
-                                        "today0": datetime.datetime.strftime(now, '%b %d, %Y'),
+                                        "today": datetime.datetime.strftime(now, '%b %d, %Y'),
                                         })
     text_content = strip_tags(html_content)
     # msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])

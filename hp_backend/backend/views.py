@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -291,19 +291,19 @@ def send_email(request):
         #                                     ))
         #                     )
 
-        html_content = render_to_string('mail_template.html', {"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
-                                                               "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
-                                                               "nosdyes": login_dyest,
-                                                               "uns_dyes": unique_dyes,
-                                                               "nosyes": login_yest,
-                                                               "pcn": pcn,
-                                                               "pchn": pchn,
-                                                               "uns_yes": unique_yes
-                                                               })
-        text_content = strip_tags(html_content)
-        # # # msg = EmailMessage('Test', 'text_content', to=['agrim.sharma@sirez.com'])
-        msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
-        msg.attach_alternative(html_content, "text/html")
+        # html_content = render_to_string('mail_template.html', {"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
+        #                                                        "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
+        #                                                        "nosdyes": login_dyest,
+        #                                                        "uns_dyes": unique_dyes,
+        #                                                        "nosyes": login_yest,
+        #                                                        "pcn": pcn,
+        #                                                        "pchn": pchn,
+        #                                                        "uns_yes": unique_yes
+        #                                                        })
+        # text_content = strip_tags(html_content)
+        msg = EmailMessage('Test', 'text_content', to=['agrim.sharma@sirez.com'])
+        # msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
+        # msg.attach_alternative(html_content, "text/html")
         msg.send()
         return HttpResponse(json.dumps(dict(payload={"yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
                                                                "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),

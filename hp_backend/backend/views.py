@@ -299,7 +299,7 @@ def send_email(request):
                                                                })
         text_content = strip_tags(html_content)
         # msg = EmailMessage('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com'])
-        msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com'])
+        msg = EmailMultiAlternatives('Test', text_content, ['agrim.sharma@sirez.com'])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         return HttpResponse(json.dumps(dict(payload={}, message="Email Sent.",

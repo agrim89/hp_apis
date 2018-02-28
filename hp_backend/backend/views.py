@@ -210,23 +210,23 @@ def report_api(request):
     col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
     buffer = io.StringIO()
     wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
-    wr.writerows([[]])
-    wr.writerows([["Daily Analysis Report"]])
-    yest = now - datetime.timedelta(days=1)
-    dyes = now - datetime.timedelta(days=2)
-    login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
-    login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
-    unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
-    unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
-    wr.writerows([["Date", "No. of Session", "Percentage Change", "Unique Sessions", "Percentage Change"]])
-    row = [dyes, login_dyest, '', unique_dyes, '']
-    wr.writerows([row])
-    if login_yest > 0 and unique_yes > 0:
-        row = [yest, login_yest, (login_dyest/login_yest) * 100, unique_dyes, (unique_dyes/unique_yes) * 100]
-    else:
-        row = [yest, login_yest, (login_dyest / 1) * 100, unique_dyes, (unique_dyes / 1) * 100]
-    wr.writerows([row])
-    wr.writerows([[]])
+    # wr.writerows([[]])
+    # wr.writerows([["Daily Analysis Report"]])
+    # yest = now - datetime.timedelta(days=1)
+    # dyes = now - datetime.timedelta(days=2)
+    # login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
+    # login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
+    # unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
+    # unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
+    # wr.writerows([["Date", "No. of Session", "Percentage Change", "Unique Sessions", "Percentage Change"]])
+    # row = [dyes, login_dyest, '', unique_dyes, '']
+    # wr.writerows([row])
+    # if login_yest > 0 and unique_yes > 0:
+    #     row = [yest, login_yest, (login_dyest/login_yest) * 100, unique_dyes, (unique_dyes/unique_yes) * 100]
+    # else:
+    #     row = [yest, login_yest, (login_dyest / 1) * 100, unique_dyes, (unique_dyes / 1) * 100]
+    # wr.writerows([row])
+    # wr.writerows([[]])
     wr.writerows([[]])
     wr.writerows([['Active User Data']])
     wr.writerows([col_heads])

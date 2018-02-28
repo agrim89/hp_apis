@@ -279,6 +279,15 @@ def send_email(request):
         unique_dyes = len(PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes))
         pchn = (login_yest/login_dyest)*100 if login_dyest > 0 else 0
         pcn = (unique_yes/unique_dyes)*100 if unique_dyes > 0 else 0
+        return HttpResponse(json.dumps({"yest": yest,
+                                                               "dyest": dyes,
+                                                               "nosdyes": login_dyest,
+                                                               "uns_dyes": unique_dyes,
+                                                               "nosyes": login_yest,
+                                                               "pcn": pcn,
+                                                               "pchn": pchn,
+                                                               "uns_yes": unique_yes
+                                                               }))
         html_content = render_to_string('mail_template.html', {"yest": yest,
                                                                "dyest": dyes,
                                                                "nosdyes": login_dyest,

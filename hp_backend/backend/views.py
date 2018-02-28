@@ -275,33 +275,33 @@ def send_email(request):
         now = datetime.datetime.now().date()
         yest = now - datetime.timedelta(days=1)
         dyes = now - datetime.timedelta(days=2)
-        login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
-        login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
-        unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
-        unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
-        pchn = (login_yest/login_dyest)*100 if login_dyest > 0 else 0
-        pcn = (unique_yes/unique_dyes)*100 if unique_dyes > 0 else 0
-        template = get_template('mail_template.html')
-        context = {"yest": yest,"dyest": dyes,"nosdyes": login_dyest,"uns_dyes": unique_dyes,"nosyes": login_yest,"pcn": pcn,"pchn": pchn,"uns_yes": unique_yes}
-        content = template.render(context)
+        # login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
+        # login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
+        # unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
+        # unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
+        # pchn = (login_yest/login_dyest)*100 if login_dyest > 0 else 0
+        # pcn = (unique_yes/unique_dyes)*100 if unique_dyes > 0 else 0
+        # template = get_template('mail_template.html')
+        # context = {"yest": yest,"dyest": dyes,"nosdyes": login_dyest,"uns_dyes": unique_dyes,"nosyes": login_yest,"pcn": pcn,"pchn": pchn,"uns_yes": unique_yes}
+        # content = template.render(context)
         # send_mail('HP user report', '', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_message=content)
-        msg = EmailMessage('subject', content, 'agrim.sharma@sirez.com', to=['agrim.sharma@sirez.com',])
-        msg.send()
+        # msg = EmailMessage('subject', 'content', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_)
+        # # msg.send()
 
-        # html_content = render_to_string('mail_template.html', {"yest": yest,
-        #                                                        "dyest": dyes,
-        #                                                        "nosdyes": login_dyest,
-        #                                                        "uns_dyes": unique_dyes,
-        #                                                        "nosyes": login_yest,
-        #                                                        "pcn": pcn,
-        #                                                        "pchn": pchn,
-        #                                                        "uns_yes": unique_yes
-        #                                                        })
-        # text_content = strip_tags(html_content)
+        html_content = render_to_string('mail_template.html', {"yest": yest,
+                                                               "dyest": dyes,
+                                                               # "nosdyes": login_dyest,
+                                                               # "uns_dyes": unique_dyes,
+                                                               # "nosyes": login_yest,
+                                                               # "pcn": pcn,
+                                                               # "pchn": pchn,
+                                                               # "uns_yes": unique_yes
+                                                               })
+        text_content = strip_tags(html_content)
         # msg = EmailMessage('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com'])
-        # msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com'])
-        # msg.attach_alternative(html_content, "text/html")
-        # msg.send()
+        msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com'])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
         return HttpResponse(json.dumps(dict(payload={}, message="Email Sent.",
                                             status=status.HTTP_200_OK))
                             )

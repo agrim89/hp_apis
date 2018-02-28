@@ -208,33 +208,28 @@ class ChangePassword(APIView):
 def report_api(request):
     import io, csv
     col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
-    with open('static/user_login_report_{}.csv'.format(datetime.datetime.now().date()), 'wb+') as file:
-        # buffer = io.StringIO()
-        wr = csv.writer(file, quoting=csv.QUOTE_ALL)
-        wr.writerows([col_heads])
-        now = datetime.datetime.now().date()
+    buffer = io.StringIO()
+    wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
+    wr.writerows([col_heads])
+    now = datetime.datetime.now().date()
 
-        wr.writerows([[]])
-        wr.writerows([['Active User Data']])
-        last = now - datetime.timedelta(days=30)
-        active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
-        active = user_data(active_user)
-        wr.writerows(active)
+    wr.writerows([[]])
+    wr.writerows([['Active User Data']])
+    last = now - datetime.timedelta(days=30)
+    active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
+    active = user_data(active_user)
+    wr.writerows(active)
 
-        wr.writerows([['Deactive User Data']])
-        deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
-        deactive = user_data(deactive_user)
-        wr.writerows(deactive)
+    wr.writerows([['Deactive User Data']])
+    deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
+    deactive = user_data(deactive_user)
+    wr.writerows(deactive)
 
-        # buffer.seek(0)
-        # response = HttpResponse(buffer, content_type='text/csv')
-        # response['Content-Disposition'] = 'attachment; filename=static/user_login_report_{}.csv'.\
-        #     format(datetime.datetime.now().date())
-        mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
-        mail.attach_file('static/user_login_report_{}.csv'.format(datetime.datetime.now().date()))
-        mail.send()
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=user_login_data_{}.csv'.format(datetime.datetime.now().date())
 
-        return HttpResponse("success")
+    return response
 
 
     # col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']

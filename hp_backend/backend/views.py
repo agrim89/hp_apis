@@ -270,7 +270,6 @@ def send_email(request):
     from django.core.mail import EmailMultiAlternatives
 
     try:
-        import pdb;pdb.set_trace()
         now = datetime.datetime.now().date()
         yest = now - datetime.timedelta(days=1)
         dyes = now - datetime.timedelta(days=2)

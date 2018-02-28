@@ -7,6 +7,9 @@ from .serializers import BaseUserSerializer, CompanySerializer
 import datetime, json
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
 
 
 class UserDetail(APIView):
@@ -265,10 +268,6 @@ def user_data(user):
 
 
 def send_email(request):
-    from django.template.loader import render_to_string
-    from django.utils.html import strip_tags
-    from django.core.mail import EmailMultiAlternatives
-
     try:
         now = datetime.datetime.now().date()
         yest = now - datetime.timedelta(days=1)
@@ -296,6 +295,4 @@ def send_email(request):
                                             status=status.HTTP_200_OK))
                             )
     except Exception:
-        return HttpResponse(json.dumps(dict(payload={}, message="Email not Sent.",
-                                            status=status.HTTP_206_PARTIAL_CONTENT))
-                            )
+        return HttpResponse(Exception)

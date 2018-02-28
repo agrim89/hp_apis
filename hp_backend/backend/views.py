@@ -4,11 +4,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Partner, PartnerSalesTeam, Product, Category
 from .serializers import BaseUserSerializer, CompanySerializer
-import datetime, os
+import datetime, json
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
-from xlsxwriter.workbook import Workbook
-from io import StringIO
 
 
 class UserDetail(APIView):
@@ -264,3 +262,15 @@ def user_data(user):
         data.append([i, name, email, dealer_name, login_count, last_login])
         i += 1
     return data
+
+
+def send_email(request):
+    email = EmailMessage('HP Daily report {}'.format(datetime.datetime.now().date()),
+                         """Please find the below link for last day report \n
+                            http://103.91.90.234:8000/apis/v1/report/
+                         """, to=['agrim.sharma@sirez.com', 'vishal.jain@sirez.com'])
+
+    email.send()
+    return HttpResponse(json.dumps(dict(payload={}, message="Email Sent.",
+                         status=status.HTTP_200_OK))
+                    )

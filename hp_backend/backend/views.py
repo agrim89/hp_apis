@@ -281,8 +281,8 @@ def report_api(request):
 
 def user_data(user):
     data = []
+    i = 1
     for a in user:
-        i = 1
         name = a.get_full_name()
         email = a.email
         dealer_name = a.dealer_name.company_name

@@ -272,9 +272,9 @@ def user_data(user):
 def send_email(request):
     try:
         from django.core.mail import send_mail
-        now = datetime.datetime.now().date()
-        yest = now - datetime.timedelta(days=1)
-        dyes = now - datetime.timedelta(days=2)
+        # now = datetime.datetime.now().date()
+        # yest = now - datetime.timedelta(days=1)
+        # dyes = now - datetime.timedelta(days=2)
         # login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
         # login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
         # unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
@@ -288,17 +288,17 @@ def send_email(request):
         # msg = EmailMessage('subject', 'content', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_)
         # # msg.send()
 
-        html_content = render_to_string('mail_template.html', {"yest": yest,
-                                                               "dyest": dyes,
-                                                               # "nosdyes": login_dyest,
-                                                               # "uns_dyes": unique_dyes,
-                                                               # "nosyes": login_yest,
-                                                               # "pcn": pcn,
-                                                               # "pchn": pchn,
-                                                               # "uns_yes": unique_yes
-                                                               })
-        text_content = strip_tags(html_content)
-        msg = EmailMessage('Test', text_content,  ['agrim.sharma@sirez.com'])
+        # html_content = render_to_string('mail_template.html', {"yest": yest,
+        #                                                        "dyest": dyes,
+        #                                                        # "nosdyes": login_dyest,
+        #                                                        # "uns_dyes": unique_dyes,
+        #                                                        # "nosyes": login_yest,
+        #                                                        # "pcn": pcn,
+        #                                                        # "pchn": pchn,
+        #                                                        # "uns_yes": unique_yes
+        #                                                        })
+        # text_content = strip_tags(html_content)
+        msg = EmailMessage('Test', 'text_content', ['agrim.sharma@sirez.com'])
         # msg = EmailMultiAlternatives('Test', text_content, ['agrim.sharma@sirez.com'])
         # msg.attach_alternative(html_content, "text/html")
         msg.send()

@@ -229,16 +229,18 @@ def report_api(request):
         row = [yest, login_yest, (login_dyest / 1) * 100, unique_dyes, (unique_dyes / 1) * 100]
     wr.writerows([row])
     wr.writerows([[]])
-    wr.writerows([col_heads])
-
     wr.writerows([[]])
     wr.writerows([['Active User Data']])
+    wr.writerows([col_heads])
+    wr.writerows([[]])
 
     active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
     active = user_data(active_user)
     wr.writerows(active)
     wr.writerows([[]])
+    wr.writerows([[]])
     wr.writerows([['Deactive User Data']])
+    wr.writerows([col_heads])
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
     deactive = user_data(deactive_user)
     wr.writerows(deactive)

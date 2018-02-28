@@ -299,7 +299,7 @@ def email():
     #                                     ))
     #                     )
 
-    html_content = render_to_string('user/mail_template.html',
+    html_content = render_to_string('mail_template.html',
                                     {
                                         "yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
                                         "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
@@ -315,3 +315,4 @@ def email():
     msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
     msg.attach_alternative(html_content, "text/html")
     return msg.send()
+

@@ -213,14 +213,17 @@ def report_api(request):
     wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
     wr.writerows([col_heads])
     now = datetime.datetime.now().date()
+
+    wr.writerows([[]])
+    wr.writerows([['Active User Data']])
     last = now - datetime.timedelta(days=30)
-    active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
+    active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
     active = user_data(active_user)
     wr.writerows(active)
 
     wr.writerows([['Deactive User Data']])
-    deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last)
-    deactive = user_data(active_user)
+    deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
+    deactive = user_data(deactive_user)
     wr.writerows(deactive)
 
     buffer.seek(0)

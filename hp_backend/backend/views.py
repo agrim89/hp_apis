@@ -304,14 +304,15 @@ def email():
 
     html_content = render_to_string('mail_template.html',
                                     {
-                                        "yest": datetime.datetime.strftime(yest, '%Y-%m-%d'),
-                                        "dyest": datetime.datetime.strftime(dyes, '%Y-%m-%d'),
+                                        "yest": datetime.datetime.strftime(yest, '%b %d, %Y'),
+                                        "dyest": datetime.datetime.strftime(dyes, '%b %d, %Y'),
                                         "nosdyes": login_dyest,
                                         "uns_dyes": unique_dyes,
                                         "nosyes": login_yest,
                                         "pcn": pcn,
                                         "pchn": pchn,
-                                        "uns_yes": unique_yes
+                                        "uns_yes": unique_yes,
+                                        "today0": datetime.datetime.strftime(now, '%b %d, %Y'),
                                         })
     text_content = strip_tags(html_content)
     # msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])

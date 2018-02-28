@@ -265,12 +265,38 @@ def user_data(user):
 
 
 def send_email(request):
-    email = EmailMessage('HP Daily report {}'.format(datetime.datetime.now().date()),
-                         """Please find the below link for last day report \n
-                            http://103.91.90.234:8000/apis/v1/report/
-                         """, to=['agrim.sharma@sirez.com', 'vishal.jain@sirez.com'])
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+    from django.core.mail import EmailMultiAlternatives
 
-    email.send()
-    return HttpResponse(json.dumps(dict(payload={}, message="Email Sent.",
-                         status=status.HTTP_200_OK))
-                    )
+    try:
+        import pdb;pdb.set_trace()
+        now = datetime.datetime.now().date()
+        yest = now - datetime.timedelta(days=1)
+        dyes = now - datetime.timedelta(days=2)
+        login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
+        login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
+        unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
+        unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
+        pchn = login_yest/login_dyest if login_dyest > 0 else 1
+        pcn = unique_yes/unique_dyes if unique_dyes > 0 else 1
+        html_content = render_to_string('mail_template.html', {"yest": yest,
+                                                               "dyest": dyes,
+                                                               "nosdyes": login_dyest,
+                                                               "uns_dyes": unique_dyes,
+                                                               "nosyes": login_yest,
+                                                               "pcn": pcn,
+                                                               "pchn": pchn,
+                                                               "uns_yes": unique_yes
+                                                               })
+        text_content = strip_tags(html_content)
+        msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com'])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        return HttpResponse(json.dumps(dict(payload={}, message="Email Sent.",
+                                            status=status.HTTP_200_OK))
+                            )
+    except Exception:
+        return HttpResponse(json.dumps(dict(payload={}, message="Email not Sent.",
+                                            status=status.HTTP_206_PARTIAL_CONTENT))
+                            )

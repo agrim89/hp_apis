@@ -7,8 +7,9 @@ from .serializers import BaseUserSerializer, CompanySerializer
 import datetime, os
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
-from .report_api import ReportGenerator, CSVReportGenerator
-from django.conf import settings
+from xlsxwriter.workbook import Workbook
+from io import StringIO
+
 
 class UserDetail(APIView):
 
@@ -205,28 +206,53 @@ class ChangePassword(APIView):
 
 
 def report_api(request):
+    import io, csv
     col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
-    report_active = ReportGenerator('active_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
-    report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
+
+    buffer = io.StringIO()
+    wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
+    wr.writerows([col_heads])
     now = datetime.datetime.now().date()
     last = now - datetime.timedelta(days=30)
     active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
-    # deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last).values_list('first_name')#, 'email',
-                                                                               # 'dealer_name__company_name',
-                                                                               # 'login_count', 'last_login')
     active = user_data(active_user)
-    # deactive = user_data(deactive_user)
-    report_active.write_header(col_heads)
-    # report_deactive.write_header(col_heads)
-    report_active.write_body(active)
-    # report_deactive.write_body(deactive_user)
-    mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
-    mail.attach_file(os.path.join(settings.STATIC_ROOT, 'active_user_report_{}.xlsx'.\
-                                  format(datetime.datetime.now().date())))
-    # mail.attach_file(os.path.join(settings.STATIC_ROOT, 'deactive_user_report_{}.xlsx'.\
+    wr.writerows(active)
+
+    wr.writerows([['Deactive User Data']])
+    deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last)
+    deactive = user_data(active_user)
+    wr.writerows(deactive)
+
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=user_login Report.csv'
+
+    return response
+
+
+    # col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
+
+    # report_active = ReportGenerator('active_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
+    # report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
+    # now = datetime.datetime.now().date()
+    # last = now - datetime.timedelta(days=30)
+    # active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
+    # # deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last).values_list('first_name')#, 'email',
+    #                                                                            # 'dealer_name__company_name',
+    #                                                                            # 'login_count', 'last_login')
+    # active = user_data(active_user)
+    # # deactive = user_data(deactive_user)
+    # report_active.write_header(col_heads)
+    # # report_deactive.write_header(col_heads)
+    # report_active.write_body(active)
+    # # report_deactive.write_body(deactive_user)
+    # mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
+    # mail.attach_file(os.path.join(settings.STATIC_ROOT, 'active_user_report_{}.xlsx'.\
     #                               format(datetime.datetime.now().date())))
-    mail.send()
-    return HttpResponse('Success')
+    # # mail.attach_file(os.path.join(settings.STATIC_ROOT, 'deactive_user_report_{}.xlsx'.\
+    # #                               format(datetime.datetime.now().date())))
+    # mail.send()
+    # return HttpResponse('Success')
 
     # response = HttpResponse(content_type="text/csv")
     # response['Content-Disposition'] = "attachment; filename='report.csv'"

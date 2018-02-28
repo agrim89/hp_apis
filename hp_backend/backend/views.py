@@ -207,19 +207,37 @@ class ChangePassword(APIView):
 
 def report_api(request):
     import io, csv
+    now = datetime.datetime.now().date()
+    last = now - datetime.timedelta(days=30)
     col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
     buffer = io.StringIO()
     wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
+    wr.writerows([[]])
+    wr.writerows([["Daily Analysis Report"]])
+    yest = now - datetime.timedelta(days=1)
+    dyes = now - datetime.timedelta(days=2)
+    login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
+    login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
+    unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
+    unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
+    wr.writerows([["Date", "No. of Session", "Percentage Change", "Unique Sessions", "Percentage Change"]])
+    row = [dyes, login_dyest, '', unique_dyes, '']
+    wr.writerows([row])
+    if login_yest > 0:
+        row = [yest, login_yest, (login_dyest/login_yest) * 100, unique_dyes, (unique_dyes/unique_yes) * 100]
+    else:
+        row = [yest, login_yest, (login_dyest / 1) * 100, unique_dyes, (unique_dyes / 1) * 100]
+    wr.writerows([row])
+    wr.writerows([[]])
     wr.writerows([col_heads])
-    now = datetime.datetime.now().date()
 
     wr.writerows([[]])
     wr.writerows([['Active User Data']])
-    last = now - datetime.timedelta(days=30)
+
     active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
     active = user_data(active_user)
     wr.writerows(active)
-
+    wr.writerows([[]])
     wr.writerows([['Deactive User Data']])
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
     deactive = user_data(deactive_user)
@@ -230,53 +248,6 @@ def report_api(request):
     response['Content-Disposition'] = 'attachment; filename=user_login_data_{}.csv'.format(datetime.datetime.now().date())
 
     return response
-
-
-    # col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
-
-    # report_active = ReportGenerator('active_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
-    # report_deactive = ReportGenerator('deactive_user_report_{}.xlsx'.format(datetime.datetime.now().date()))
-    # now = datetime.datetime.now().date()
-    # last = now - datetime.timedelta(days=30)
-    # active_user = PartnerSalesTeam.objects.filter(last_login__gte=last)
-    # # deactive_user = PartnerSalesTeam.objects.filter(last_login__lte=last).values_list('first_name')#, 'email',
-    #                                                                            # 'dealer_name__company_name',
-    #                                                                            # 'login_count', 'last_login')
-    # active = user_data(active_user)
-    # # deactive = user_data(deactive_user)
-    # report_active.write_header(col_heads)
-    # # report_deactive.write_header(col_heads)
-    # report_active.write_body(active)
-    # # report_deactive.write_body(deactive_user)
-    # mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
-    # mail.attach_file(os.path.join(settings.STATIC_ROOT, 'active_user_report_{}.xlsx'.\
-    #                               format(datetime.datetime.now().date())))
-    # # mail.attach_file(os.path.join(settings.STATIC_ROOT, 'deactive_user_report_{}.xlsx'.\
-    # #                               format(datetime.datetime.now().date())))
-    # mail.send()
-    # return HttpResponse('Success')
-
-    # response = HttpResponse(content_type="text/csv")
-    # response['Content-Disposition'] = "attachment; filename='report.csv'"
-    # with open('reports/report_{}.csv'.format(datetime.datetime.now()), 'w+') as writer:
-    #     writer = csv.writer(response)
-    #     writer.writerow(['Active Users last login with in a month'])
-    #     now = datetime.datetime.now().date()
-    #     last = now - datetime.timedelta(days=30)
-    #     writer.writerow(fields)
-    #     active = PartnerSalesTeam.objects.filter(last_login__gte=last)
-    #     deactive = PartnerSalesTeam.objects.filter(last_login__lte=last)
-    #     for i in range(len(active)):
-    #         writer.writerow([i+1, active[i].get_full_name(), active[i].email, active[i].dealer_name,
-    #                          active[i].login_count, active[i].last_login])
-    #
-    #         writer.writerow(['Deactive users last login greater than a month'])
-    #     for i in range(len(deactive)):
-    #         writer.writerow([i+1, deactive[i].get_full_name(), deactive[i].email, deactive[i].dealer_name,
-    #                          deactive[i].login_count, deactive[i].last_login])
-    #     mail = EmailMessage('subject', 'text', ['agrim.sharma@sirez.com'], ['agrim.sharma@sirez.com'])
-    #     mail.attach_file()
-    # return response
 
 
 def user_data(user):

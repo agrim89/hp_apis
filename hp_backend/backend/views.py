@@ -228,7 +228,11 @@ def report_api(request):
 
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=user_login Report.csv'
+    response['Content-Disposition'] = 'attachment; filename=static/user_login_report_{}.csv'.\
+        format(datetime.datetime.now().date())
+    mail = EmailMessage('subject', 'text', 'agrim.sharma@sirez.com', ["agrim.sharma@sirez.com"])
+    mail.attach_file('static/user_login_report_{}.csv'.format(datetime.datetime.now().date()))
+    mail.send()
 
     return response
 

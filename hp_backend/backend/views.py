@@ -284,9 +284,9 @@ def send_email(request):
         template = get_template('mail_template.html')
         context = {"yest": yest,"dyest": dyes,"nosdyes": login_dyest,"uns_dyes": unique_dyes,"nosyes": login_yest,"pcn": pcn,"pchn": pchn,"uns_yes": unique_yes}
         content = template.render(context)
-        send_mail('HP user report', '', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_message=content)
-        # msg = EmailMessage('subject', 'content', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_)
-        # # msg.send()
+        # send_mail('HP user report', '', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_message=content)
+        msg = EmailMessage('subject', content, 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',])
+        msg.send()
 
         # html_content = render_to_string('mail_template.html', {"yest": yest,
         #                                                        "dyest": dyes,

@@ -277,8 +277,8 @@ def send_email(request):
         login_dyest = PartnerSalesTeam.objects.filter(last_login=dyes).count()
         unique_yes = PartnerSalesTeam.objects.filter(login_count=1, last_login=yest).count()
         unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
-        pchn = login_yest/login_dyest if login_dyest > 0 else 1
-        pcn = unique_yes/unique_dyes if unique_dyes > 0 else 1
+        pchn = (login_yest/login_dyest)*100 if login_dyest > 0 else 1
+        pcn = (unique_yes/unique_dyes)*100 if unique_dyes > 0 else 1
         html_content = render_to_string('mail_template.html', {"yest": yest,
                                                                "dyest": dyes,
                                                                "nosdyes": login_dyest,

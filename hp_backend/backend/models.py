@@ -25,7 +25,7 @@ class UserType(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = "UserType"
+        verbose_name_plural = "User Type"
 
     def __str__(self):
         return "{}".format(self.name)
@@ -50,7 +50,7 @@ class ProductType(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = "ProductType"
+        verbose_name_plural = "Product Type"
 
     def __str__(self):
         return "{}".format(self.name)

@@ -51,7 +51,7 @@ class ProductDetailsAdmin(admin.ModelAdmin):
               ('graphics', "price"), "data_sheet", "image_url", "status"]
 
     list_display = ('category', 'product', "processor", "hard_disk", "ram", 'price', "modified")
-    list_filter = ('category', 'ram', "processor", "hard_disk")
+    list_filter = ('category', 'ram', "processor", "hard_disk", "user_type", "product_type")
     search_fields = ['product']
 
 

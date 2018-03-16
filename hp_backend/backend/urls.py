@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^change_password/', views.ChangePassword.as_view()),
     url(r"^report/", views.report_api),
     url(r"^send_email/", views.send_email),
+
 ]

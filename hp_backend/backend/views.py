@@ -96,7 +96,7 @@ class ListDetail(APIView):
                                                                             "price", "data_sheet", "image_url", "status")
                     category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
                     payload['product'] = bpc
-                    payload['category'] = categoryßßß
+                    payload['category'] = category
 
                     return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                          time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))

@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Partner, PartnerSalesTeam, Product, Category
+from .models import Partner, PartnerSalesTeam, Product, Category, UserType, ProductType
 from .serializers import BaseUserSerializer, CompanySerializer
 import datetime, json
 from django.core.mail import EmailMessage
@@ -93,22 +93,32 @@ class ListDetail(APIView):
                                                                             , 'part_no',"specification_details", "processor",
                                                                             "screen_size", "warranty", "ram", "hard_disk",
                                                                             "operating_system", "screen", "odd", "graphics",
-                                                                            "price", "data_sheet", "image_url", "status")
+                                                                            "price", "data_sheet", "image_url", "status",
+                                                                            "user_type", "product_type")
                     category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
+                    user_type = UserType.objects.filter(modified__gte=date).values('id', 'name')
+                    product_type = Category.objects.filter(modified__gte=date).values('id', 'name')
                     payload['product'] = bpc
                     payload['category'] = category
+                    payload['user_type'] = user_type
+                    payload['product_type'] = product_type
 
                     return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                          time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
                 else:
                     bpc = Product.objects.all().values('id', 'category', 'category__name', 'product', 'part_no',
-                                                                            "specification_details", "processor",
-                                                                            "screen_size", "warranty", "ram", "hard_disk",
-                                                                            "operating_system", "screen", "odd", "graphics",
-                                                                            "price", "data_sheet", "image_url", "status")
+                                                       "specification_details", "processor", "screen_size", "warranty",
+                                                       "ram", "hard_disk", "operating_system", "screen", "odd",
+                                                       "graphics","price", "data_sheet", "image_url", "status",
+                                                       "user_type", "product_type")
                     category = Category.objects.all().values('id', 'name', 'status')
+                    user_type = UserType.objects.all().values('id', 'name')
+                    product_type = ProductType.objects.all().values('id', 'name')
                     payload['product'] = bpc
                     payload['category'] = category
+                    payload['user_type'] = user_type
+                    payload['product_type'] = product_type
+
                     return Response(
                         dict(payload=payload, status=status.HTTP_200_OK,
                              time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"),

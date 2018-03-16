@@ -9,6 +9,56 @@ gender = (
 )
 
 
+class UserType(models.Model):
+    name = models.CharField(max_length=100)
+    created = models.CharField(max_length=100, null=True, blank=True)
+    modified = models.CharField(max_length=100, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if self.created:
+            self.modified = now
+        else:
+            self.modified = now
+            self.created = now
+        return super(UserType, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = "UserType"
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+    def __unicode__(self):
+        return "{}".format(self.name)
+
+
+class ProductType(models.Model):
+    name = models.CharField(max_length=100)
+    created = models.CharField(max_length=100, null=True, blank=True)
+    modified = models.CharField(max_length=100, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if self.created:
+            self.modified = now
+        else:
+            self.modified = now
+            self.created = now
+        return super(ProductType, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = "ProductType"
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+    def __unicode__(self):
+        return "{}".format(self.name)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     created = models.CharField(max_length=100, null=True, blank=True)
@@ -77,6 +127,8 @@ class PartnerSalesTeam(User):
 
 class Product(models.Model):
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
+    user_type = models.ManyToManyField(to=UserType)
+    product_type = models.ManyToManyField(to=ProductType)
     product = models.CharField(max_length=1000)
     part_no = models.CharField(max_length=1000)
     specification_details = models.CharField(max_length=1000)

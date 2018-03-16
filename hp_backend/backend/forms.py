@@ -1,5 +1,5 @@
 import django.forms
-from .models import PartnerSalesTeam, Product, Partner, Category
+from .models import PartnerSalesTeam, Product, Partner, Category, UserType, ProductType
 
 
 class BaseUserForm(django.forms.ModelForm):
@@ -17,6 +17,20 @@ class CategoryForm(django.forms.ModelForm):
         fields = ['name',]
 
 
+class UserTypeForm(django.forms.ModelForm):
+
+    class Meta:
+        model = UserType
+        fields = ['name',]
+
+
+class ProductTypeForm(django.forms.ModelForm):
+
+    class Meta:
+        model = ProductType
+        fields = ['name',]
+
+
 class CompanyForm(django.forms.ModelForm):
     """
     User form
@@ -29,8 +43,15 @@ class CompanyForm(django.forms.ModelForm):
 class ProductDetailsForm(django.forms.ModelForm):
     """
     User form
-    """
+    # """
+
     class Meta:
         model = Product
-        fields = ['category', 'product', 'part_no', "specification_details", "processor", "screen_size", "warranty",
-                  "ram", "hard_disk", "operating_system", "screen", 'odd', 'graphics', "price", "image_url", "status"]
+        fields = ['category', 'product', "user_type", "product_type", 'part_no', "specification_details", "processor",
+                  "screen_size", "warranty", "ram", "hard_disk", "operating_system", "screen", 'odd', 'graphics',
+                  "price", "image_url", "status"]
+
+        widgets = {
+            "user_type": django.forms.SelectMultiple(attrs={'cols': 1, "rows": 10}),
+            "product_type": django.forms.SelectMultiple(attrs={'cols': 1, "rows": 10}),
+        }

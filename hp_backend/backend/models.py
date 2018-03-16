@@ -116,7 +116,7 @@ class PartnerSalesTeam(User):
 
     class Meta:
         ordering = ('email',)
-        verbose_name_plural = "PartnerSalesTeam"
+        verbose_name_plural = "Partner Sales Team"
 
     def __str__(self):
         return "{} : {}".format(self.username, self.dealer_name.company_name)

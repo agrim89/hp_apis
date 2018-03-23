@@ -337,7 +337,8 @@ def email():
     now = datetime.datetime.now()
     csvfile = io.StringIO()
     wr = csv.writer(csvfile)
-
+    wr.writerow(["HP Active/Deactive User Report"])
+    wr.writerow([])
     last = now - datetime.timedelta(days=30)
     col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
     wr.writerow([])

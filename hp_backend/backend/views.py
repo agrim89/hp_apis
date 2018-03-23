@@ -293,14 +293,16 @@ def report_api(request):
 
     active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
     active = user_data(active_user)
-    wr.writerows(a for a in active)
+    for a in active:
+        wr.writerows(a)
     wr.writerows([])
     wr.writerows([])
     wr.writerows(['Deactive User Data'])
     wr.writerows(col_heads)
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
     deactive = user_data(deactive_user)
-    wr.writerows(d for d in deactive)
+    for d in deactive:
+        wr.writerows(d)
 
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='text/csv')

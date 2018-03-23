@@ -327,13 +327,38 @@ def send_email(request):
     val = email()
 
     if val:
-        return HttpResponse('Success')
+        return HttpResponse(json.dumps(dict(status=200, message="Mail send successfully")))
     else:
-        return HttpResponse('Fail')
+        return HttpResponse(json.dumps(dict(status=500, message="Mail not send")))
 
 
 def email():
+    import io, csv
     now = datetime.datetime.now()
+    csvfile = io.StringIO()
+    wr = csv.writer(csvfile)
+
+    last = now - datetime.timedelta(days=30)
+    col_heads = ['SNo', 'Name', 'Email', 'Dealer Name', 'Logged Times', 'Last Login']
+    wr.writerow([])
+    wr.writerow([])
+    wr.writerow(['Active User Data'])
+    wr.writerow(col_heads)
+    wr.writerow([])
+
+    active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
+    active = user_data(active_user)
+    wr.writerow(active)
+    wr.writerow([])
+    wr.writerow([])
+    wr.writerow(['Deactive User Data'])
+    wr.writerow(col_heads)
+    deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
+    deactive = user_data(deactive_user)
+    wr.writerow(deactive)
+    wr.writerow([])
+    wr.writerow([])
+    wr.writerow(['End of report'])
     yest = now - datetime.timedelta(days=1)
     dyes = now - datetime.timedelta(days=2)
     login_yest = PartnerSalesTeam.objects.filter(last_login=yest).count()
@@ -342,20 +367,7 @@ def email():
     unique_dyes = PartnerSalesTeam.objects.filter(login_count=1, last_login=dyes).count()
     pchn = (login_yest / login_dyest) * 100 if login_dyest > 0 else 0
     pcn = (unique_yes / unique_dyes) * 100 if unique_dyes > 0 else 0
-    # from django.core.mail import send_mail
-
-    # template = get_template('mail_template.html')
-    # context = {"yest": yest,"dyest": dyes,"nosdyes": login_dyest,"uns_dyes": unique_dyes,"nosyes": login_yest,"pcn": pcn,"pchn": pchn,"uns_yes": unique_yes}
-    # content = template.render(context)
-    # send_mail('HP user report', '', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_message=content)
-    # msg = EmailMessage('subject', 'content', 'agrim.sharma@sirez.com', ['agrim.sharma@sirez.com',], html_)
-    # # msg.send()
-    # return HttpResponse(json.dumps(dict(payload={'test': datetime.datetime.strftime(now, '%Y-%m-%d')}, message="Email not Sent.",
-    #                                     status=status.HTTP_200_OK
-    #                                     ))
-    #                     )
-
-    html_content = render_to_string('mail_template.html',
+    html_content = render_to_string('user/mail_template.html',
                                     {
                                         "yest": datetime.datetime.strftime(yest, '%b %d, %Y'),
                                         "dyest": datetime.datetime.strftime(dyes, '%b %d, %Y'),
@@ -368,8 +380,10 @@ def email():
                                         "today": datetime.datetime.strftime(now, '%b %d, %Y'),
                                         })
     text_content = strip_tags(html_content)
-    # msg = EmailMessage('Test', text_content, to=['agrim.sharma@sirez.com'])
-    msg = EmailMultiAlternatives('Test', text_content, 'agrim.sharma@sirez.com', mail_list)
+    msg = EmailMultiAlternatives('HP Report {}'.format(datetime.datetime.strftime(now, '%b %d, %Y')),
+                                 text_content, 'reports@sirez.com', mail_list)
     msg.attach_alternative(html_content, "text/html")
+    msg.attach("daily_report_{}.csv".format(datetime.datetime.strftime(now, '%b %d, %Y')),
+                                            csvfile.getvalue(), "text/csv")
     return msg.send()
 

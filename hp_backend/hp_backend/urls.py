@@ -18,5 +18,7 @@ from backend.admin import admin_site
 
 urlpatterns = [
     path('admin/', admin_site.urls),
-    path('apis/v1/', include("backend.urls"))
+    path('apis/v1/', include("backend.urls")),
+    path('jet/', include("jet.urls"), name='jet'),
+
 ]

@@ -286,23 +286,21 @@ def report_api(request):
     #     row = [yest, login_yest, (login_dyest / 1) * 100, unique_dyes, (unique_dyes / 1) * 100]
     # wr.writerows([row])
     # wr.writerows([[]])
-    wr.writerows([])
-    wr.writerows(['Active User Data'])
-    wr.writerows(col_heads)
-    wr.writerows([])
+    wr.writerows([[]])
+    wr.writerows([['Active User Data']])
+    wr.writerows([col_heads])
+    wr.writerows([[]])
 
     active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
     active = user_data(active_user)
-    for a in active:
-        wr.writerows(a)
-    wr.writerows([])
-    wr.writerows([])
-    wr.writerows(['Deactive User Data'])
-    wr.writerows(col_heads)
+    wr.writerows(active)
+    wr.writerows([[]])
+    wr.writerows([[]])
+    wr.writerows([['Deactive User Data']])
+    wr.writerows([col_heads])
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
     deactive = user_data(deactive_user)
-    for d in deactive:
-        wr.writerows(d)
+    wr.writerows(deactive)
 
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='text/csv')
@@ -350,14 +348,16 @@ def email():
 
     active_user = PartnerSalesTeam.objects.filter(last_login__gt=last, last_login__lt=now)
     active = user_data(active_user)
-    wr.writerow(active)
+    for d in active:
+        wr.writerow(d)
     wr.writerow([])
     wr.writerow([])
     wr.writerow(['Deactive User Data'])
     wr.writerow(col_heads)
     deactive_user = PartnerSalesTeam.objects.filter(last_login__lt=last)
     deactive = user_data(deactive_user)
-    wr.writerow(deactive)
+    for d in deactive:
+        wr.writerow(d)
     wr.writerow([])
     wr.writerow([])
     wr.writerow(['End of report'])
@@ -383,7 +383,7 @@ def email():
                                         })
     text_content = strip_tags(html_content)
     msg = EmailMultiAlternatives('HP Report {}'.format(datetime.datetime.strftime(now, '%b %d, %Y')),
-                                 text_content, 'reports@sirez.com', mail_list)
+                                 text_content, 'agrim.sharma@sirez.com', mail_list)
     msg.attach_alternative(html_content, "text/html")
     msg.attach("daily_report_{}.csv".format(datetime.datetime.strftime(now, '%b %d, %Y')),
                                             csvfile.getvalue(), "text/csv")

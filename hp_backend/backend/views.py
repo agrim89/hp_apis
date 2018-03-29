@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Partner, PartnerSalesTeam, Product, Category, UserType, ProductType
-from .serializers import BaseUserSerializer, CompanySerializer
+from .serializers import BaseUserSerializer, CompanySerializer, UserTypeSerializer, ProductTypeSerializer
 import datetime, json
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
@@ -132,16 +132,37 @@ class NewListDetail(APIView):
                 date = request.data["date"]
                 payload = dict()
                 if date:
-                    bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name','product'
-                                                                            , 'part_no',"specification_details", "processor",
-                                                                            "screen_size", "warranty", "ram", "hard_disk",
-                                                                            "operating_system", "screen", "odd", "graphics",
-                                                                            "price", "data_sheet", "image_url", "status",
-                                                                            "user_type", "product_type")
+                    bpc = Product.objects.filter(modified__gte=date)
+                    values = []
+                    for v in bpc:
+                        out = dict(id=v.id,
+                                   category=v.category.id,
+                                   category__name=v.category.name,
+                                   product=v.product,
+                                   part_no=v.part_no,
+                                   specification_details=v.specification_details,
+                                   processor=v.processor,
+                                   screen_size=v.screen_size,
+                                   warranty=v.warranty,
+                                   ram=v.ram, hard_disk=v.hard_disk,
+                                   operating_system=v.operating_system,
+                                   screen=v.screen, odd=v.odd, graphics=v.graphics,
+                                   price=v.price, data_sheet=v.data_sheet, image_url=v.image_url,
+                                   status=v.status,
+                                   user_type=[x.id for x in v.user_type.all()],
+                                   product_type=[x.id for x in v.product_type.all()]
+                                   )
+                        values.append(out)
+                        # .values('id', 'category', 'category__name','product'
+                        #                                                     , 'part_no',"specification_details", "processor",
+                        #                                                     "screen_size", "warranty", "ram", "hard_disk",
+                        #                                                     "operating_system", "screen", "odd", "graphics",
+                        #                                                     "price", "data_sheet", "image_url", "status",
+                        #                                                     "user_type", "product_type")
                     category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
-                    user_type = UserType.objects.filter(modified__gte=date).values('id', 'name')
-                    product_type = Category.objects.filter(modified__gte=date).values('id', 'name')
-                    payload['product'] = bpc
+                    user_type = UserType.objects.filter(modified__gte=date).values('id', 'name', 'status')
+                    product_type = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
+                    payload['product'] = values
                     payload['category'] = category
                     payload['user_type'] = user_type
                     payload['product_type'] = product_type
@@ -149,22 +170,43 @@ class NewListDetail(APIView):
                     return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                          time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
                 else:
-                    bpc = Product.objects.all().values('id', 'category', 'category__name', 'product', 'part_no',
-                                                       "specification_details", "processor", "screen_size", "warranty",
-                                                       "ram", "hard_disk", "operating_system", "screen", "odd",
-                                                       "graphics","price", "data_sheet", "image_url", "status",
-                                                       "user_type", "product_type")
+                    bpc = Product.objects.all()
+                    values = []
+                    for v in bpc:
+                        out = dict(id=v.id,
+                                   category=v.category.id,
+                                   category__name=v.category.name,
+                                   product=v.product,
+                                   part_no=v.part_no,
+                                   specification_details=v.specification_details,
+                                   processor=v.processor,
+                                   screen_size=v.screen_size,
+                                   warranty=v.warranty,
+                                   ram=v.ram, hard_disk=v.hard_disk,
+                                   operating_system=v.operating_system,
+                                   screen=v.screen, odd=v.odd, graphics=v.graphics,
+                                   price=v.price, data_sheet=v.data_sheet, image_url=v.image_url,
+                                   status=v.status,
+                                   user_type=[x.id for x in v.user_type.all()],
+                                   product_type=[x.id for x in v.product_type.all()]
+                                   )
+                        values.append(out)
+                        # .values('id', 'category', 'category__name', 'product', 'part_no',
+                        #                                "specification_details", "processor", "screen_size", "warranty",
+                        #                                "ram", "hard_disk", "operating_system", "screen", "odd",
+                        #                                "graphics","price", "data_sheet", "image_url", "status",
+                        #                                "user_type", "product_type")
                     category = Category.objects.all().values('id', 'name', 'status')
-                    user_type = UserType.objects.all().values('id', 'name')
-                    product_type = ProductType.objects.all().values('id', 'name')
-                    payload['product'] = bpc
+                    user_type = UserType.objects.all().values('id', 'name', 'status')
+                    product_type = ProductType.objects.all().values('id', 'name', 'status')
+                    payload['product'] = values
                     payload['category'] = category
                     payload['user_type'] = user_type
                     payload['product_type'] = product_type
 
                     return Response(
                         dict(payload=payload, status=status.HTTP_200_OK,
-                             time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"),
+                             time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="success"),
                         status=status.HTTP_200_OK)
             else:
                 return Response(

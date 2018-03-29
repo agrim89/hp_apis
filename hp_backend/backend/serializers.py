@@ -38,3 +38,13 @@ class CompanySerializer(serializers.Serializer):
         Create and return a new `Snippet` instance, given the validated data.
         """
         return Partner.objects.create(**validated_data)
+
+
+class UserTypeSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=1000)
+    status = serializers.BooleanField(default=True)
+
+
+class ProductTypeSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=1000)
+    status = serializers.BooleanField(default=True)

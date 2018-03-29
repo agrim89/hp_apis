@@ -13,6 +13,7 @@ class UserType(models.Model):
     name = models.CharField(max_length=100)
     created = models.CharField(max_length=100, null=True, blank=True)
     modified = models.CharField(max_length=100, null=True, blank=True)
+    status = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -38,6 +39,7 @@ class ProductType(models.Model):
     name = models.CharField(max_length=100)
     created = models.CharField(max_length=100, null=True, blank=True)
     modified = models.CharField(max_length=100, null=True, blank=True)
+    status = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')

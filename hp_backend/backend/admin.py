@@ -3,6 +3,7 @@ from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
 from .forms import BaseUserForm, CompanyForm, ProductDetailsForm, CategoryForm, UserTypeForm, ProductTypeForm
 from .models import PartnerSalesTeam, Product, Partner, Category, UserType, ProductType
+from django.db.models import Count, Sum
 
 
 class BaseUserAdmin(admin.ModelAdmin):
@@ -46,7 +47,7 @@ class CompanyAdmin(admin.ModelAdmin):
 class ProductDetailsAdmin(admin.ModelAdmin):
 
     form = ProductDetailsForm
-    fields = [('product', 'category'), ("user_type", "product_type"), ('part_no', "specification_details"),
+    fields = [('product', 'category'), 'description', ("user_type", "product_type"), ('part_no', "specification_details"),
               ("processor", "screen_size"), ("warranty", "ram"), ("hard_disk", "operating_system"), ("screen", 'odd'),
               ('graphics', "price"), "data_sheet", "image_url", "status"]
 

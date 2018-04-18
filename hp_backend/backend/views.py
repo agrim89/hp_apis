@@ -89,7 +89,7 @@ class ListDetail(APIView):
                 date = request.data["date"]
                 payload = dict()
                 if date:
-                    bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'category__name','product'
+                    bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'description', 'category__name','product'
                                                                             , 'part_no',"specification_details", "processor",
                                                                             "screen_size", "warranty", "ram", "hard_disk",
                                                                             "operating_system", "screen", "odd", "graphics",
@@ -101,7 +101,7 @@ class ListDetail(APIView):
                     return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                          time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
                 else:
-                    bpc = Product.objects.all().values('id', 'category', 'category__name', 'product', 'part_no',
+                    bpc = Product.objects.all().values('id', 'category', 'description', 'category__name', 'product', 'part_no',
                                                        "specification_details", "processor", "screen_size", "warranty",
                                                        "ram", "hard_disk", "operating_system", "screen", "odd",
                                                        "graphics","price", "data_sheet", "image_url", "status")
@@ -138,6 +138,7 @@ class NewListDetail(APIView):
                         out = dict(id=v.id,
                                    category=v.category.id,
                                    category__name=v.category.name,
+                                   description=v.description,
                                    product=v.product,
                                    part_no=v.part_no,
                                    specification_details=v.specification_details,
@@ -176,6 +177,7 @@ class NewListDetail(APIView):
                         out = dict(id=v.id,
                                    category=v.category.id,
                                    category__name=v.category.name,
+                                   description=v.description,
                                    product=v.product,
                                    part_no=v.part_no,
                                    specification_details=v.specification_details,

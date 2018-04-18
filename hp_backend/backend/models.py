@@ -131,6 +131,7 @@ class Product(models.Model):
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
     user_type = models.ManyToManyField(to=UserType)
     product_type = models.ManyToManyField(to=ProductType)
+    description = models.CharField(max_length=1000, null=True, blank=True)
     product = models.CharField(max_length=1000)
     part_no = models.CharField(max_length=1000)
     specification_details = models.CharField(max_length=1000)

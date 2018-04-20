@@ -116,7 +116,7 @@ class ListDetail(APIView):
 
                     return Response(
                         dict(payload=payload, status=status.HTTP_200_OK,
-                             time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="Please select a date"),
+                             time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message="success"),
                         status=status.HTTP_200_OK)
             else:
                 return Response(

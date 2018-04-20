@@ -89,11 +89,14 @@ class ListDetail(APIView):
                 date = request.data["date"]
                 payload = dict()
                 if date:
-                    bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'description', 'category__name','product'
-                                                                            , 'part_no',"specification_details", "processor",
-                                                                            "screen_size", "warranty", "ram", "hard_disk",
-                                                                            "operating_system", "screen", "odd", "graphics",
-                                                                            "price", "data_sheet", "image_url", "status")
+                    bpc = Product.objects.filter(modified__gte=date).values('id', 'category', 'product', "user_type",
+                                                                            "product_type","operating_system",
+                                                                            "processor", "weight", "screen_size",
+                                                                            "power", 'warranty', "ports",
+                                                                            "expansion_slots", "network_interface",
+                                                                            "graphics", "memory", "hard_disk",
+                                                                            "odd", "description", "price",
+                                                                            "image_url", "data_sheet", "status")
                     category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
                     payload['product'] = bpc
                     payload['category'] = category
@@ -101,10 +104,12 @@ class ListDetail(APIView):
                     return Response(dict(payload=payload, status=status.HTTP_200_OK,
                                          time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message='success'))
                 else:
-                    bpc = Product.objects.all().values('id', 'category', 'description', 'category__name', 'product', 'part_no',
-                                                       "specification_details", "processor", "screen_size", "warranty",
-                                                       "ram", "hard_disk", "operating_system", "screen", "odd",
-                                                       "graphics","price", "data_sheet", "image_url", "status")
+                    bpc = Product.objects.all().values('id', 'category', 'product', "user_type", "product_type",
+                                                       "operating_system", "processor", "weight", "screen_size",
+                                                       "power", 'warranty', "ports", "expansion_slots",
+                                                       "network_interface", "graphics", "memory", "hard_disk",
+                                                       "odd", "description", "price", "image_url", "data_sheet",
+                                                       "status")
                     category = Category.objects.all().values('id', 'name', 'status')
                     payload['product'] = bpc
                     payload['category'] = category
@@ -138,28 +143,30 @@ class NewListDetail(APIView):
                         out = dict(id=v.id,
                                    category=v.category.id,
                                    category__name=v.category.name,
-                                   description=v.description,
                                    product=v.product,
-                                   part_no=v.part_no,
-                                   specification_details=v.specification_details,
+                                   user_type = [x.id for x in v.user_type.all()],
+                                   product_type = [x.id for x in v.product_type.all()],
+                                   operating_system = v.operating_system,
                                    processor=v.processor,
+                                   weight=v.weight,
                                    screen_size=v.screen_size,
+                                   power=v.power,
                                    warranty=v.warranty,
-                                   ram=v.ram, hard_disk=v.hard_disk,
-                                   operating_system=v.operating_system,
-                                   screen=v.screen, odd=v.odd, graphics=v.graphics,
-                                   price=v.price, data_sheet=v.data_sheet, image_url=v.image_url,
-                                   status=v.status,
-                                   user_type=[x.id for x in v.user_type.all()],
-                                   product_type=[x.id for x in v.product_type.all()]
+                                   ports=v.ports,
+                                   expansion_slots=v.expansion_slots,
+                                   network_interface=v.network_interface,
+                                   graphics=v.graphics,
+                                   memory=v.memory,
+                                   hard_disk=v.hard_disk,
+                                   odd=v.odd,
+                                   description=v.description,
+                                   price=v.price,
+                                   image_url=v.image_url,
+                                   data_sheet=v.data_sheet,
+                                   status=v.status
                                    )
                         values.append(out)
-                        # .values('id', 'category', 'category__name','product'
-                        #                                                     , 'part_no',"specification_details", "processor",
-                        #                                                     "screen_size", "warranty", "ram", "hard_disk",
-                        #                                                     "operating_system", "screen", "odd", "graphics",
-                        #                                                     "price", "data_sheet", "image_url", "status",
-                        #                                                     "user_type", "product_type")
+
                     category = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
                     user_type = UserType.objects.filter(modified__gte=date).values('id', 'name', 'status')
                     product_type = Category.objects.filter(modified__gte=date).values('id', 'name', 'status')
@@ -177,27 +184,30 @@ class NewListDetail(APIView):
                         out = dict(id=v.id,
                                    category=v.category.id,
                                    category__name=v.category.name,
-                                   description=v.description,
                                    product=v.product,
-                                   part_no=v.part_no,
-                                   specification_details=v.specification_details,
+                                   user_type = [x.id for x in v.user_type.all()],
+                                   product_type = [x.id for x in v.product_type.all()],
+                                   operating_system = v.operating_system,
                                    processor=v.processor,
+                                   weight=v.weight,
                                    screen_size=v.screen_size,
+                                   power=v.power,
                                    warranty=v.warranty,
-                                   ram=v.ram, hard_disk=v.hard_disk,
-                                   operating_system=v.operating_system,
-                                   screen=v.screen, odd=v.odd, graphics=v.graphics,
-                                   price=v.price, data_sheet=v.data_sheet, image_url=v.image_url,
-                                   status=v.status,
-                                   user_type=[x.id for x in v.user_type.all()],
-                                   product_type=[x.id for x in v.product_type.all()]
+                                   ports=v.ports,
+                                   expansion_slots=v.expansion_slots,
+                                   network_interface=v.network_interface,
+                                   graphics=v.graphics,
+                                   memory=v.memory,
+                                   hard_disk=v.hard_disk,
+                                   odd=v.odd,
+                                   description=v.description,
+                                   price=v.price,
+                                   image_url=v.image_url,
+                                   data_sheet=v.data_sheet,
+                                   status=v.status
                                    )
                         values.append(out)
-                        # .values('id', 'category', 'category__name', 'product', 'part_no',
-                        #                                "specification_details", "processor", "screen_size", "warranty",
-                        #                                "ram", "hard_disk", "operating_system", "screen", "odd",
-                        #                                "graphics","price", "data_sheet", "image_url", "status",
-                        #                                "user_type", "product_type")
+
                     category = Category.objects.all().values('id', 'name', 'status')
                     user_type = UserType.objects.all().values('id', 'name', 'status')
                     product_type = ProductType.objects.all().values('id', 'name', 'status')

@@ -47,11 +47,14 @@ class ProductDetailsForm(django.forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['category', 'product', "user_type", "product_type", 'part_no', "specification_details", "processor",
-                  "screen_size", "warranty", "ram", "hard_disk", "operating_system", "screen", 'odd', 'graphics',
-                  "price", "image_url", "status"]
+        fields = ['category', 'product', "user_type", "product_type","operating_system", "processor", "weight",
+                  "screen_size", "power", 'warranty', "ports", "expansion_slots", "network_interface",
+                  "graphics", "memory", "hard_disk", "odd", "description", "price", "image_url",
+                  "data_sheet", "status"]
 
         widgets = {
-            "user_type": django.forms.SelectMultiple(attrs={'cols': 1, "rows": 10}),
-            "product_type": django.forms.SelectMultiple(attrs={'cols': 1, "rows": 10}),
+            "user_type": django.forms.SelectMultiple(attrs={'cols': 5, "rows": 10}),
+            "product_type": django.forms.SelectMultiple(attrs={'cols': 5, "rows": 10}),
+            "image_url": django.forms.Textarea(attrs={'cols': 100, "rows": 1}),
+            "data_sheet": django.forms.Textarea(attrs={'cols': 100, "rows": 1}),
         }

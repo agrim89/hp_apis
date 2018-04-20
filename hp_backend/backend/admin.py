@@ -47,12 +47,13 @@ class CompanyAdmin(admin.ModelAdmin):
 class ProductDetailsAdmin(admin.ModelAdmin):
 
     form = ProductDetailsForm
-    fields = [('product', 'category'), 'description', ("user_type", "product_type"), ('part_no', "specification_details"),
-              ("processor", "screen_size"), ("warranty", "ram"), ("hard_disk", "operating_system"), ("screen", 'odd'),
-              ('graphics', "price"), "data_sheet", "image_url", "status"]
+    fields = [('product', 'category'),("user_type", "product_type"),("operating_system", "processor"),
+              ("weight", "screen_size"), ("power", 'warranty'), ("ports", "expansion_slots"),
+              ("network_interface", "graphics"), ("memory", "hard_disk"), ("odd", "description"),
+              "price", "image_url", "data_sheet", "status"]
 
-    list_display = ('category', 'product', "processor", "hard_disk", "ram", 'price', "modified")
-    list_filter = ('category', 'ram', "processor", "hard_disk", "user_type", "product_type")
+    list_display = ('category', 'product', "processor", "hard_disk", "memory", 'price', "modified")
+    list_filter = ('category', 'memory', "processor", "hard_disk", "user_type", "product_type")
     search_fields = ['product']
 
 
